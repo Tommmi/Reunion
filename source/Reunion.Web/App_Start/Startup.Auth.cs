@@ -14,9 +14,11 @@ namespace Reunion.Web
 {
     public partial class Startup
     {
+		internal static IDataProtectionProvider DataProtectionProvider { get; private set; }
 		// For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
 		public void ConfigureAuth(IAppBuilder app)
         {
+			DataProtectionProvider = app.GetDataProtectionProvider();
 			app.CreatePerOwinContext(() => DependencyResolver.Current.GetService<ApplicationUserManager>());
 
 			// Enable the application to use a cookie to store information for the signed in user

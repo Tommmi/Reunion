@@ -47,6 +47,7 @@ namespace Reunion.Web
         public ApplicationUserManager(IUserStore<ApplicationUser> store, IEmailSender emailSender)
             : base(store)
         {
+
 			// Configure validation logic for usernames
 			UserValidator = new UserValidator<ApplicationUser>(this)
 			{
@@ -84,9 +85,16 @@ namespace Reunion.Web
 			EmailService = new EmailService(emailSender);
 			//manager.SmsService = new SmsService();
 
+			var dataProtectionProvider = Startup.DataProtectionProvider;
+			if (dataProtectionProvider != null)
+			{
+				IDataProtector dataProtector = dataProtectionProvider.Create("ASP.NET Identity");
+
+				UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtector);
+			}
 		}
 
-    }
+	}
 
     // Configure the application sign-in manager which is used in this application.
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>

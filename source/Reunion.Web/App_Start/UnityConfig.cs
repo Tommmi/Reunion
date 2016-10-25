@@ -39,13 +39,13 @@ namespace Reunion.Web
 
 			var mailAddressOfReunion = new MailAddress("findtime@gmx.de", displayName: "Reunion Webservice");
 
-			container.Register<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(
+			container.RegisterPerRequest<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(
 						c => new UserStore<ApplicationUser>(c.Get<ApplicationDbContext>()));
-			container.Register<ApplicationUserManager>();
-			container.RegisterSingleton<ILazy<ApplicationUserManager>, TUtils.Common.DependencyInjection.Lazy<ApplicationUserManager>>(di => new TUtils.Common.DependencyInjection.Lazy<ApplicationUserManager>(di));
-			container.Register<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication);
+			container.RegisterPerRequest<ApplicationUserManager>();
+			container.RegisterPerRequest<ILazy<ApplicationUserManager>, TUtils.Common.DependencyInjection.Lazy<ApplicationUserManager>>(di => new TUtils.Common.DependencyInjection.Lazy<ApplicationUserManager>(di));
+			container.RegisterPerRequest<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication);
 			container.RegisterSingleton<IAppSettings, AppSettings>();
-			container.Register<ApplicationSignInManager>();
+			container.RegisterPerRequest<ApplicationSignInManager>();
 			container.RegisterSingleton<ILogWriter, Log4NetWriter>(c => new Log4NetWriter());
 			container.RegisterSingleton<ITLog, TLog>(c => new TLog(c.Get<ILogWriter>(), isLoggingOfMethodNameActivated: false));
 			container.RegisterSingleton<IEmailSender, SmptEmailSender>(c =>

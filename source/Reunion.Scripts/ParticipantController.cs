@@ -26,7 +26,6 @@ namespace Reunion.Scripts
 			/// <summary>
 			/// "0": MayContactByWebservice
 			/// "1": ContactFirstTimePersonally
-			/// "2": LetAdminForwardMailToParticipantOnly
 			/// </summary>
 			public string contactPolicyValue;
 			/// <summary>

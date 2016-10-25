@@ -19,6 +19,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\LICENSE = ..\LICENSE
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "documentation", "documentation", "{8650C266-B015-463E-A31B-D7077924A829}"
+	ProjectSection(SolutionItems) = preProject
+		..\documentation\concept.txt = ..\documentation\concept.txt
+		..\documentation\Einladung.png = ..\documentation\Einladung.png
+		..\documentation\history.md = ..\documentation\history.md
+		..\documentation\Klassendiagramm.png = ..\documentation\Klassendiagramm.png
+		..\documentation\MailanTeilnehmer.png = ..\documentation\MailanTeilnehmer.png
+		..\documentation\Modelreferences.xlsx = ..\documentation\Modelreferences.xlsx
+		..\documentation\UML.zargo = ..\documentation\UML.zargo
+		..\documentation\WeckeOrganizer.png = ..\documentation\WeckeOrganizer.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
