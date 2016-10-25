@@ -1,0 +1,62 @@
+﻿@*
+    Required:
+        Model: Reunion.Web.Models.ReunionListViewModel
+
+*@
+@using Reunion.Web.Controllers
+@using Reunion.Web.Resources
+@using Reunion.Web.Models
+@using TUtils.Common.Extensions
+@using TUtils.Common.MVC
+@model ReunionListViewModel
+@{
+    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.ReunionManageTitle);
+}
+
+@section body
+{
+    <table class="table">
+        <caption>
+            <h2>@Resource1.ReunionManageTitle</h2></caption>
+        <colgroup>
+            <col width="20%">
+            <col width="80%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th></th>
+            <th>@Resource1.ReunionTitle</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var reunion in Model.Reunions)
+        {
+            <tr>
+                <td>
+                    <a href="#@("deleteDlg" + reunion.ReunionId)" class="btn btn-danger delClick" data-toggle="modal">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                    @Html.RenderConfirmationModalDlg(
+                        modalDlgId: "deleteDlg" + reunion.ReunionId,
+                        title: Resource1.Confirmation,
+                        dlgText: string.Format(Resource1.DoYouWantDeleteReunion, reunion.Name),
+                        yes: Resource1.Delete,
+                        no: Resource1.Cancel,
+                        hrefOnOk: Url.Action(nameof(ReunionController.Delete), routeValues: new {id = reunion.ReunionId}))
+                    <a href="@Url.Action(nameof(ReunionController.Edit), routeValues: new {id = reunion.ReunionId})" class="btn btn-primary editClick" title="@Resource1.ReunionEditHint">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                </td>
+                <td>
+                    @Html.ActionLink(
+                        linkText: reunion.Name,
+                        actionName: nameof(ReunionController.Status),
+                        routeValues: new {id = reunion.ReunionId},
+                        htmlAttributes: new {title = Resource1.ReunionStatusTitle})
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    @Html.ActionLink(Resource1.CreateNewReunion,actionName:nameof(ReunionController.Create),routeValues:null,htmlAttributes:new {@class="btn btn-primary"})
+}

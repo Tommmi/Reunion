@@ -1,0 +1,714 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccountConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="AccountErrorLengthTooShort" xml:space="preserve">
+    <value>The {0} must be at least {2} characters long.</value>
+  </data>
+  <data name="AccountErrPasswordAndConfirmationNotMatch" xml:space="preserve">
+    <value>The password and confirmation password do not match.</value>
+  </data>
+  <data name="Account_RememberMe" xml:space="preserve">
+    <value>Remember me?</value>
+  </data>
+  <data name="Account_RememberThisBrowser" xml:space="preserve">
+    <value>Remember this browser?</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+    <comment>key code for unlocking account</comment>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="AccountConfirmEmail" xml:space="preserve">
+    <value>Confirm Email</value>
+  </data>
+  <data name="AccountConfirmNewPassword" xml:space="preserve">
+    <value>Confirm new password</value>
+  </data>
+  <data name="AccountCurrentPassword" xml:space="preserve">
+    <value>Current password</value>
+  </data>
+  <data name="AccountErrNewPasswordAndConfirmationNotMatch" xml:space="preserve">
+    <value>The new password and confirmation password do not match.</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="AccountEmailLink" xml:space="preserve">
+    <value>Email Link</value>
+  </data>
+  <data name="AccountEnterYourEmail" xml:space="preserve">
+    <value>Enter your email.</value>
+  </data>
+  <data name="AccountForgotPasswordConfirmation" xml:space="preserve">
+    <value>Forgot Password Confirmation</value>
+  </data>
+  <data name="AccountForgotYourPassword" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
+  <data name="AccountPleaseCheckYourEmail" xml:space="preserve">
+    <value>Please check your email to reset your password.</value>
+  </data>
+  <data name="AccountPleaseClickHereToLogin1" xml:space="preserve">
+    <value>Please click here to {0}</value>
+    <comment>Please click here to log in</comment>
+  </data>
+  <data name="AccountPleaseClickHereToLogin2" xml:space="preserve">
+    <value>log in</value>
+    <comment>Please click here to log in</comment>
+  </data>
+  <data name="AccountRegisterNewUser" xml:space="preserve">
+    <value>Register as a new user</value>
+  </data>
+  <data name="AccountThankYouForConfirmingYourEmail" xml:space="preserve">
+    <value>Thank you for confirming your email.</value>
+  </data>
+  <data name="AcountLogin" xml:space="preserve">
+    <value>Log in</value>
+    <comment>Title</comment>
+  </data>
+  <data name="AccountClickingHere" xml:space="preserve">
+    <value>here</value>
+  </data>
+  <data name="AccountErrFailedToVerifyPhone" xml:space="preserve">
+    <value>Failed to verify phone</value>
+  </data>
+  <data name="AccountErrInvalidCode" xml:space="preserve">
+    <value>Invalid code.</value>
+  </data>
+  <data name="AccountErrInvalidLoginAttempt" xml:space="preserve">
+    <value>Invalid login attempt.</value>
+  </data>
+  <data name="AccountForgotSubject" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="AccountYourPasswordHasBeenChanged" xml:space="preserve">
+    <value>Your password has been changed.</value>
+  </data>
+  <data name="AccountYourPasswordHasBeenSet" xml:space="preserve">
+    <value>Your password has been set.</value>
+  </data>
+  <data name="AccountYourPhoneNumberWasAdded" xml:space="preserve">
+    <value>Your phone number was added.</value>
+  </data>
+  <data name="AccountYourPhoneNumberWasRemoved" xml:space="preserve">
+    <value>Your phone number was removed.</value>
+  </data>
+  <data name="AccountYourSecurityCodeIs" xml:space="preserve">
+    <value>Your security code is:</value>
+  </data>
+  <data name="AccountYourTwoFactorAuthenticationProviderHasBeenSet" xml:space="preserve">
+    <value>Your two-factor authentication provider has been set.</value>
+  </data>
+  <data name="ErrAnErrorHasOccurred" xml:space="preserve">
+    <value>An error has occurred.</value>
+  </data>
+  <data name="AccountConfirmYourAccount" xml:space="preserve">
+    <value>Reunion - confirm your account</value>
+  </data>
+  <data name="AccountPleaseConfirmYourAccount" xml:space="preserve">
+    <value>Please confirm your account by clicking {0}</value>
+    <comment>Please confirm your account by clicking here</comment>
+  </data>
+  <data name="AccountChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="AccountChangePasswordForm" xml:space="preserve">
+    <value>Change Password Form</value>
+  </data>
+  <data name="AccountChangeTitle" xml:space="preserve">
+    <value>Change your account settings</value>
+  </data>
+  <data name="AccountChangeYourPassword" xml:space="preserve">
+    <value>Change your password</value>
+  </data>
+  <data name="AccountClickHerToLogin" xml:space="preserve">
+    <value>Please click here to log in</value>
+  </data>
+  <data name="AccountCreateNew" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="AccountCreateNewAccount" xml:space="preserve">
+    <value>Create a new account.</value>
+  </data>
+  <data name="AccountEnterVerificationCode" xml:space="preserve">
+    <value>Enter verification code</value>
+  </data>
+  <data name="AccountManage" xml:space="preserve">
+    <value>Manage</value>
+    <comment>Title for manage own user account</comment>
+  </data>
+  <data name="AccountRegister" xml:space="preserve">
+    <value>Register</value>
+    <comment>Title</comment>
+  </data>
+  <data name="AccountResetPasswordConfirmation" xml:space="preserve">
+    <value>Reset password confirmation</value>
+  </data>
+  <data name="AccountResetYourPassword" xml:space="preserve">
+    <value>Reset your password.</value>
+  </data>
+  <data name="AccountSelectTwoFactor" xml:space="preserve">
+    <value>Select Two-Factor Authentication Provider:</value>
+  </data>
+  <data name="AccountSendCodeTitle" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="AccountSendVerificationCode" xml:space="preserve">
+    <value>Send verification code</value>
+  </data>
+  <data name="AccountVerify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="AccountYourPasswordHasBeenReset" xml:space="preserve">
+    <value>Your password has been reset.</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="ReunionTitle" xml:space="preserve">
+    <value>Reunion</value>
+  </data>
+  <data name="AboutViewTitle" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="ConfirmEmailViewTitle" xml:space="preserve">
+    <value>Confirm Email</value>
+  </data>
+  <data name="ContactViewTitle" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="ErrorViewTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="LockedOutViewTitle" xml:space="preserve">
+    <value>Locked Out</value>
+  </data>
+  <data name="MenuItemAboutTitel" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="MenuItemContactTitel" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="MenuItemHomeTitel" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="MenuItemRegisterTitle" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="MenuItemLoginTitle" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="HelloYou" xml:space="preserve">
+    <value>Hello </value>
+  </data>
+  <data name="StartPageHeader" xml:space="preserve">
+    <value>Time to reunite</value>
+  </data>
+  <data name="MoreAboutReunion" xml:space="preserve">
+    <value>More About &lt;span class="productname"&gt;Reunion&lt;/span&gt;</value>
+  </data>
+  <data name="CreateNewReunion" xml:space="preserve">
+    <value>Create a new reunion</value>
+  </data>
+  <data name="ManageExistingReunion" xml:space="preserve">
+    <value>Open ongoing planning</value>
+  </data>
+  <data name="AccountPleaseResetYourPassword" xml:space="preserve">
+    <value>Please click {0} to reset your password.</value>
+  </data>
+  <data name="ReunionCreate" xml:space="preserve">
+    <value>Plan a New Reunion</value>
+  </data>
+  <data name="ReunionNameLabel" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="InvitationTextLabel" xml:space="preserve">
+    <value>Invitation text</value>
+  </data>
+  <data name="Participants" xml:space="preserve">
+    <value>Participants</value>
+  </data>
+  <data name="RequiredTitle" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="ParticipantName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Language_DE" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Language_EN" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="MayContactByWebservice" xml:space="preserve">
+    <value>may be contacted by &lt;span class='productname'&gt;Reunion&lt;/span&gt;</value>
+  </data>
+  <data name="ContactFirstTimePersonally" xml:space="preserve">
+    <value>First contact only via my email address</value>
+  </data>
+  <data name="LetAdminForwardMailToParticipantOnly" xml:space="preserve">
+    <value>communicate only indirectly over me</value>
+  </data>
+  <data name="ErrTextTooLong" xml:space="preserve">
+    <value>"{0}" may have at maximum {1} characters</value>
+  </data>
+  <data name="ErrRequired" xml:space="preserve">
+    <value>"{0}" is required</value>
+  </data>
+  <data name="ErrValidationErrorsOccured" xml:space="preserve">
+    <value>Some fields have not been filled in correctly</value>
+  </data>
+  <data name="SubmitNewReunion" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="ErrEnterParticipants" xml:space="preserve">
+    <value>You should enter one participant at minimum</value>
+  </data>
+  <data name="DeadlineMustBeInFuture" xml:space="preserve">
+    <value>Deadline must be in future</value>
+  </data>
+  <data name="Deadline" xml:space="preserve">
+    <value>Deadline of planning</value>
+  </data>
+  <data name="WhenDoYouCome" xml:space="preserve">
+    <value>When can you come ?</value>
+  </data>
+  <data name="ReunionSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="ReunionSettingsFriends" xml:space="preserve">
+    <value>Participants (except you)</value>
+  </data>
+  <data name="PerfectDay" xml:space="preserve">
+    <value>Perfect Day</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Maybe" xml:space="preserve">
+    <value>Maybe</value>
+  </data>
+  <data name="ErrReunionNameAllreadyExist" xml:space="preserve">
+    <value>Name of reunion allready exists</value>
+  </data>
+  <data name="ReunionStatusTitle" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ErrAmbigiousParticipantEmail" xml:space="preserve">
+    <value>The participants may not use the same mail address</value>
+  </data>
+  <data name="StatusCreated" xml:space="preserve">
+    <value>Not started yet</value>
+  </data>
+  <data name="StatusRunning" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="StatusProposingDate" xml:space="preserve">
+    <value>We found a date !</value>
+  </data>
+  <data name="StatusFinallyInvitating" xml:space="preserve">
+    <value>The final invitations have been sent.</value>
+  </data>
+  <data name="StatusFinishedSucceeded" xml:space="preserve">
+    <value>All required participants will come. The meeting takes place.</value>
+  </data>
+  <data name="StatusFinishedFailed" xml:space="preserve">
+    <value>There was no date for the meeting to be found. The meeting will not take place.</value>
+  </data>
+  <data name="StartPlanning" xml:space="preserve">
+    <value>Start planning reunion. Send invitations.</value>
+  </data>
+  <data name="InvitationMailSubject" xml:space="preserve">
+    <value>Invitation {0}</value>
+  </data>
+  <data name="InvitationMailBody" xml:space="preserve">
+    <value>{1}
+
+To find a suitable date, the web service "Reunion" is used.
+"Reunion" may have sent you already a mail from {3} containing a personal link to "Reunion".
+If you did not receive the email yet, please also check your spam folder.
+With the containing link you can - without having to log you in particular - immediately enter your preferred dates.
+If you can not come in the given period, you can note this on that site as well.
+</value>
+  </data>
+  <data name="InvitationMailBodyParticipant" xml:space="preserve">
+    <value>{1}&lt;br&gt;
+&lt;br&gt;
+To find a suitable date, the web service "Reunion" is used.&lt;br&gt;
+With this &lt;a href="{3}"&gt;link&lt;/a&gt; you can - without having to log you in particular - immediately enter your preferred dates.&lt;br&gt;
+If you can not come in the given period, you can note this on that site as well.&lt;br&gt;
+</value>
+  </data>
+  <data name="KnockMailSubject" xml:space="preserve">
+    <value>{0} - status update</value>
+  </data>
+  <data name="KnockMailBody" xml:space="preserve">
+    <value>Regarding {0} your action is required.&lt;br&gt;
+&lt;a href="{1}"&gt;Reunion&lt;/a&gt;</value>
+  </data>
+  <data name="TitleParticipantView" xml:space="preserve">
+    <value>Your Date Proposals</value>
+  </data>
+  <data name="UpdateParticipantsPreferences" xml:space="preserve">
+    <value>Propose</value>
+  </data>
+  <data name="ParticipantStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="DateRanking" xml:space="preserve">
+    <value>Best Date Proposals</value>
+  </data>
+  <data name="NotInvitatedYet" xml:space="preserve">
+    <value>invitation not sent yet</value>
+  </data>
+  <data name="PrimaryInvitationSent" xml:space="preserve">
+    <value>invitation sent</value>
+  </data>
+  <data name="Answered" xml:space="preserve">
+    <value>answered</value>
+  </data>
+  <data name="NotAnswered1" xml:space="preserve">
+    <value>not answered</value>
+  </data>
+  <data name="FinallyInvitated" xml:space="preserve">
+    <value>final invitation sent</value>
+  </data>
+  <data name="Rejected1" xml:space="preserve">
+    <value>refused</value>
+  </data>
+  <data name="NotAnswered2" xml:space="preserve">
+    <value>not answered</value>
+  </data>
+  <data name="RejectedFinallyInvitation" xml:space="preserve">
+    <value>final invitation refused</value>
+  </data>
+  <data name="Accepted" xml:space="preserve">
+    <value>accepted</value>
+  </data>
+  <data name="InvitationStopped" xml:space="preserve">
+    <value>reunion canceled</value>
+  </data>
+  <data name="DeadlineReached" xml:space="preserve">
+    <value>reunion canceled</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="AcceptedParticipants" xml:space="preserve">
+    <value>accepting participants</value>
+  </data>
+  <data name="RefusingParticipants" xml:space="preserve">
+    <value>refusing participants</value>
+  </data>
+  <data name="ReunionManageTitle" xml:space="preserve">
+    <value>Your reunions</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="DoYouWantDeleteReunion" xml:space="preserve">
+    <value>Do you really want to delete the reunion {0} ?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ReunionEditHint" xml:space="preserve">
+    <value>Edit reunion</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="HelloParticipant" xml:space="preserve">
+    <value>Hello {0}! &lt;br&gt;
+Could you please mark your preferred dates regarding the meeting in the calendar ?</value>
+  </data>
+  <data name="EditReunion" xml:space="preserve">
+    <value>Manage Your Reunion</value>
+  </data>
+  <data name="ProposedDates" xml:space="preserve">
+    <value>My Calendar</value>
+  </data>
+  <data name="MonthsMissing" xml:space="preserve">
+    <value>For the following months there is still missing your statement: {0}</value>
+  </data>
+  <data name="FinallyInvite" xml:space="preserve">
+    <value>Invite ...</value>
+  </data>
+  <data name="ConfirmFinalInvitation" xml:space="preserve">
+    <value>Do you really want to take the {0} for your reunion ?</value>
+  </data>
+  <data name="FinalInvitationMailSubject" xml:space="preserve">
+    <value>Final invitation to {0}</value>
+  </data>
+  <data name="FinalInvitationMailBodyParticipant" xml:space="preserve">
+    <value>Hello,
+
+{0} will be taking place on &lt;b&gt;{1}&lt;/b&gt;.
+
+By this &lt;a href="{2}"&gt;link&lt;/a&gt; you can go to the website and finally confirm your participation.
+
+If you already have indicated that you can not come on that day you needn't give any additional cancellation.
+
+This message was created automatically by the web service &lt;b&gt;Reunion&lt;/b&gt;.</value>
+  </data>
+  <data name="FinalInvitationMailBody" xml:space="preserve">
+    <value>Hello,
+
+{0} will be taking place on &lt;b&gt;{1}&lt;/b&gt;.
+
+All participants have been informed.</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="RejectionMailSubject" xml:space="preserve">
+    <value>Rejection {0}</value>
+  </data>
+  <data name="RejectionMailBodyParticipant" xml:space="preserve">
+    <value>Hello,
+
+{0} can not take place on {1} due to too many short incoming rejections.
+We are currently trying to find an alternative date.
+
+&lt;a href="{2}"&gt;Reunion code&lt;/a&gt;</value>
+  </data>
+  <data name="DateFound" xml:space="preserve">
+    <value>The reunion will take place</value>
+  </data>
+  <data name="InvitationAccepted" xml:space="preserve">
+    <value>You accepted</value>
+  </data>
+  <data name="QuestionFinalInvitation" xml:space="preserve">
+    <value>The reunion will take place on &lt;b&gt;{0}&lt;/b&gt;.</value>
+  </data>
+  <data name="AcceptFinalDate" xml:space="preserve">
+    <value>I will attend the reunion.</value>
+  </data>
+  <data name="RejectFinaldateOnly" xml:space="preserve">
+    <value>Unfortunately, I can't come that day.</value>
+  </data>
+  <data name="ConfirmFinaldateRejection" xml:space="preserve">
+    <value>Do you really can not come on {0} ?</value>
+  </data>
+  <data name="RejectComplete" xml:space="preserve">
+    <value>Remove me from mailing list</value>
+  </data>
+  <data name="ConfirmCompleteRejection" xml:space="preserve">
+    <value>Do you want to be completely removed from the list of participants of this meeting?</value>
+  </data>
+  <data name="StartPlanningConfirmation" xml:space="preserve">
+    <value>To start the search for a suitable date, if necessary, some of the participants must be first contacted from your own email address. That is necessary to get the participants not to throw away the mail invitation automatically sent from the web server's email address. If you click on "start planning" your e-mail program will open with a pre-filled email. Please read it carefully and send it from your email address afterwards.</value>
+  </data>
+  <data name="DeactivatedParticipants" xml:space="preserve">
+    <value>Refusing participants</value>
+  </data>
+  <data name="FinalDate" xml:space="preserve">
+    <value>Date of reunion</value>
+  </data>
+  <data name="InvitationMailBodyParticipantText" xml:space="preserve">
+    <value>{1}
+
+To find a suitable date, the web service "Reunion" is used.
+With this link ({3}) you can immediately enter your preferred dates and update them at any time.
+If you can not come in the given period, you can note this on that site as well.
+</value>
+  </data>
+  <data name="ResendInvitation" xml:space="preserve">
+    <value>resend invitation</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="UpdateMyPreferences" xml:space="preserve">
+    <value>change my preferences ...</value>
+  </data>
+  <data name="FinalInvitationMailBodyParticipantText" xml:space="preserve">
+    <value>Hello,
+
+{0} will be taking place on {2}.
+
+By this Link ({3}) you can go to the website and finally confirm your participation.
+
+If you already have indicated that you can not come on that day you needn't give any additional cancellation.
+
+This message was created automatically by the web service Reunion.</value>
+  </data>
+  <data name="ResendFinalInvitation" xml:space="preserve">
+    <value>resend final invitation</value>
+  </data>
+  <data name="Intro" xml:space="preserve">
+    <value>Do you want to organize a meeting with friends, but don't know how to find a suitable day, 
+when as many people as possible have time?
+&lt;span class="productname"&gt;Reunion&lt;/span&gt; is a semi-automatic system
+to help you to find an appointment.
+&lt;span class="productname"&gt;Reunion&lt;/span&gt; contacts the participants individually 
+and asks them about their appointment proposals. 
+If there are conflicting schedules, it tries to solve it as fair as possible.
+If some participants don't answer, the web service asks the organizer
+on how to proceed with them further. 
+In the end, it proposes a date to the organizer, to which as many as possible (including the organizer) have time.</value>
+  </data>
+  <data name="IntroParticipant" xml:space="preserve">
+    <value>As a participant of a concrete meeting, you'll get an email from the respective organizer.
+That email contains a personal link to the page of your preferences for a possible date. 
+Please check your mailbox for appropriate messages or contact the organizer of the
+meeting directly. A registration on this web portal isn't necessary.</value>
+  </data>
+  <data name="IntroTitle" xml:space="preserve">
+    <value>For organizers of meetings</value>
+  </data>
+  <data name="IntroParticipantTitle" xml:space="preserve">
+    <value>For participants of a meeting</value>
+  </data>
+  <data name="WhatIsReunion" xml:space="preserve">
+    <value>What is &lt;span class="productname"&gt;Reunion&lt;/span&gt;?</value>
+  </data>
+  <data name="ConfirmLeavePage" xml:space="preserve">
+    <value>Do you really want to leave that page, without saving your changes ?</value>
+  </data>
+  <data name="ErrPossibleDatesMissing" xml:space="preserve">
+    <value>Please mark the date ranges in the calendar for a possible meeting.</value>
+  </data>
+  <data name="InvitationRejected" xml:space="preserve">
+    <value>You have rejected</value>
+  </data>
+</root>

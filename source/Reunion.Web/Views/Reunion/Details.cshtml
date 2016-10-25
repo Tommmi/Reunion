@@ -1,0 +1,117 @@
+﻿@*
+    Required:
+        Model: Reunion.Web.Models.ReunionViewModel
+
+*@
+@using Reunion.Web.Controllers
+@using Reunion.Web.Resources
+@using Reunion.Web.Models
+@using TUtils.Common.Extensions
+@using TUtils.Common.MVC
+@model ReunionViewModel
+@{
+    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.CreateNewReunion);
+    var config = new HtmExtensionConfiguration
+    {
+        LabelBootstrapClasses = "col-sm-2",
+        InputBootstrapClasses = "col-sm-8"
+    };
+    bool createNewReunion = Model.Id == 0;
+}
+
+@section body
+{
+    @using (Html.BeginForm(
+        actionName: createNewReunion ? nameof(ReunionController.Create) : nameof(ReunionController.Edit),
+        controllerName: nameof(ReunionController).RemoveController(),
+        routeValues:new {id= createNewReunion ? 0:Model.Id},
+        method: FormMethod.Post,
+        htmlAttributes: new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <h2>@(createNewReunion ? Resource1.CreateNewReunion : Resource1.EditReunion)</h2>
+        <hr />
+        @Html.ValidationSummary(excludePropertyErrors: true, message: Resource1.ErrValidationErrorsOccured, htmlAttributes: new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">@Resource1.ReunionSettings</a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        @Html.RenderFormGroup(model => model.Name, config)
+                        @Html.RenderFormGroup(model => model.InvitationText, config)
+                        @Html.RenderFormGroup(model => model.Deadline, config)
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">@Resource1.ReunionSettingsFriends</a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        @Html.RenderFormGroup(model => model.ParticipantsAsJson)
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">@Resource1.WhenDoYouCome</a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        @{ ViewBag.OrganizerMode = true;}
+                        @Html.RenderFormGroup(model => model.PossibleDates)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-success">@(createNewReunion ? Resource1.SubmitNewReunion : Resource1.Save)</button>
+                @if (createNewReunion)
+                {
+                    @Html.ActionLink(Resource1.Cancel, nameof(ReunionController.Manage), routeValues: null,htmlAttributes:new {@class= "btn btn-primary" })
+                }
+                else
+                {
+                    @Html.ActionLink(Resource1.Cancel, nameof(ReunionController.Status), routeValues: new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
+                }
+            </div>
+        </div>
+    }
+}
+@section scripts
+{
+    @Scripts.Render("~/bundles/calendar")
+    <script>
+        var userinput = false;
+
+        $(document).ready(function () {
+            $("form").submit(function () {
+                userinput = false;
+            });
+
+            $("input").change(function () {
+                userinput = true;
+            });
+
+            window.onbeforeunload = function () {
+                if (userinput) {
+                    return "@(Resource1.ConfirmLeavePage)";
+                }
+            }
+        });
+    </script>
+}

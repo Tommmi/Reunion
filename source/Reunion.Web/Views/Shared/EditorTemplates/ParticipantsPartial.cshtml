@@ -1,0 +1,100 @@
+﻿@*
+    Required:
+        Model: Json-encoded string of ParticipantViewModel[]
+*@
+@using System.Threading
+@using Reunion.Web.Resources
+@model string
+@{
+    var participantsAsJson = Model;
+    var currentLanguageIsoCode = Thread.CurrentThread.CurrentCulture?.TwoLetterISOLanguageName ?? "de";
+}
+
+<div class="participant-input ng-cloak" ng-controller="ParticipantController" ngCloak>
+    <input id="ParticipantsAsJson" name="ParticipantsAsJson" type="text" class="hidden" ng-model="participantsAsJson" value="@participantsAsJson" />
+    <div class="row participant-view view-only" ng-repeat="p in participants track by p.mail">
+        <div>
+            <div class="col-xs-10">
+                <div id="{{'row-'+$index}}" class="row nopadding" ng-class-odd="'row-odd'" ng-class-even="'row-even'">
+                    <div class="col-xs-12 col-sm-5 nopadding name">
+                        <label>{{p.name}}</label>
+                    </div>
+                    <div class="col-xs-12 col-sm-7 nopadding mail">
+                        <label>{{p.mail}}</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-2 nopadding requiredField">
+                        <label>{{p.getLocalizedRequiredStatus("@Resource1.RequiredTitle.ToLower()")}}</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 nopadding lang">
+                        <label>{{p.getLanguageIfNotDefault('@currentLanguageIsoCode')}}</label>
+                    </div>
+                    <div class="col-xs-12 col-sm-7 nopadding contactPolicy">
+                        <label>{{p.getContactPolicyIfNotDefault()}}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-2 nopadding">
+                <div class="row">
+                    <div id="{{'bttns-'+$index}}" class="col-xs-12 buttons">
+                        <a href="" class="btn btn-danger delClick" ng-click="$emit('delClick','row-'+$index)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                        <a href="" class="btn btn-primary editClick" ng-click="$emit('editClick','row-'+$index)">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editable-row-pos">
+        <div class="row nopadding" id="editable-row" mode="{{editMode}}">
+            <div class="col-xs-10 nopadding">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-5 name">
+                        <input type="text"
+                               class="form-control input-sm"
+                               placeholder="@Resource1.ParticipantName"
+                               ng-model="editrow.name">
+                    </div>
+                    <div class="col-xs-12 col-sm-7 mail">
+                        <input type="email"
+                               class="form-control input-sm"
+                               placeholder="@Resource1.Email"
+                               ng-model="editrow.mail">
+                    </div>
+                    <div class="col-xs-6 col-sm-2 requiredField">
+                        <label class="checkbox-inline"><input type="checkbox" ng-model="editrow.isRequired">@Resource1.RequiredTitle</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 lang">
+                        <select class="form-control input-sm" ng-model="editrow.playerLanguageIsoCode">
+                            <option value="de">@Resource1.Language_DE</option>
+                            <option value="en">@Resource1.Language_EN</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-12 col-sm-7 contactPolicy">
+                        <select class="form-control input-sm" ng-model="editrow.contactPolicyValue">
+                            <option value="0">@Html.Raw(Resource1.MayContactByWebservice)</option>
+                            <option value="1">@Html.Raw(Resource1.ContactFirstTimePersonally)</option>
+                            <option value="2">@Html.Raw(Resource1.LetAdminForwardMailToParticipantOnly)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-2 nopadding">
+                <div class="row nopadding">
+                    <div class="col-xs-12 buttons">
+                        <div class="">
+                            <a href="" class="btn btn-primary saveClick" ng-click="$emit('saveClick')">
+                                <span class="glyphicon glyphicon-floppy-disk"></span>
+                            </a>
+                            <a href="" class="btn btn-primary insertClick" ng-click="$emit('insertClick')">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,359 @@
+﻿@textcolor: #515151;
+@productNameColor: #7F7F7F;
+@asterixColorNormal: green;
+@tableBackgroundcolorRowEven: azure;
+@tableBackgroundcolorRowOdd: bisque;
+
+@colorAlert: #A52E32;
+@colorWarning: #A5A12E;
+@colorSuccess: #32A52E;
+
+
+@preferenceColorNoWay: #E95858;
+@preferenceColorMaybe: #EAA158;
+@import url('jquery-ui.theme.min.css');
+@preferenceColorNo: #7F7F7F;
+@preferenceColorYes: #A2EB58;
+@preferenceColorPerfect: #58EA58;
+
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+
+html body {
+    color: @textcolor;
+    padding-top: 50px;
+    padding-bottom: 20px;
+
+    .body-content {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .nopadding {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+/* ShowMyCalendar.cshtml */
+body.ShowMyCalendar {
+    p.info {
+        font-size: larger;
+        line-height: 200%;
+        margin-bottom: 30px;
+    }
+    .calendar-input {
+        margin-left:0px;
+        margin-bottom:30px;
+
+    }
+}
+
+/* Manage.cshtml */
+body.Manage {
+    td+td, th+th {
+        padding-left:20px;
+    }
+}
+
+
+/* MultiselectionCalendarPartial.cshtml */
+
+.rectangle(@color) {
+    padding-left: 15px;
+    margin-right: 4px;
+    font-family: Tahoma;
+    overflow: hidden;
+    font-size: 15px;
+    background: @color;
+}
+
+.rectanglePerfect {
+    .rectangle(@preferenceColorPerfect);
+}
+
+.rectangleYes {
+    .rectangle(@preferenceColorYes);
+}
+
+.rectangleMaybe {
+    .rectangle(@preferenceColorMaybe);
+}
+
+.rectangleNoWay {
+    .rectangle(@preferenceColorNoWay);
+}
+
+.rectangleNo {
+    .rectangle(@preferenceColorNo);
+}
+
+/* ParticipantsPartial.cshtml */
+.participant-input {
+    .participant-view {
+        label {
+            padding-left: 9px;
+            font-size: small;
+        }
+    }
+}
+
+#editable-row-pos {
+    div[mode="0"] {
+        a.saveClick {
+            display: none;
+            visibility: hidden;
+        }
+    }
+
+    div[mode="1"] {
+        a.insertClick {
+            display: none;
+            visibility: hidden;
+        }
+    }
+
+    #editable-row {
+        .col-xs-2 {
+            background-color: white;
+        }
+
+        .row {
+            padding: 3px 10px 3px 3px;
+        }
+
+        .requiredField {
+            label {
+                font-size: 12px;
+
+                input {
+                    margin-top: 2px;
+                }
+            }
+        }
+    }
+}
+
+/* Reunion\Status.cshtml */
+body.Status {
+    .row {
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        div.keyName {
+            font-weight: bold;
+        }
+    }
+
+    .btn-success {
+        margin-left:10px;
+    }
+
+    tr.warn {
+        td + td {
+            color: @colorAlert;
+        }
+    }
+    td.found {
+        color: @colorSuccess;
+    }
+}
+
+
+/* form */
+input.ng-invalid:not(:focus) {
+    border-color: red !important;
+}
+
+label.required {
+    font-weight: bold;
+}
+
+label.required:after {
+    color: @asterixColorNormal;
+    content: ' *';
+    font-size: x-large;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: inline;
+    position: absolute;
+}
+
+
+/* table */
+.row-odd {
+    background-color: @tableBackgroundcolorRowOdd;
+    line-height: 30px;
+}
+
+.row-even {
+    background-color: @tableBackgroundcolorRowEven;
+    line-height: 30px;
+}
+
+
+/* allignment utilities */
+
+.allignContainer {
+    height: 100px; // Default
+    position: relative;
+    overflow: hidden;
+
+    > .verticalCentered {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+    }
+
+    > .centered {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+    }
+
+    > .horizontalCentered {
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, 0);
+    }
+}
+
+
+.text-justify {
+    text-align: justify;
+}
+
+
+/* productname  */
+span.productname {
+    color: @productNameColor;
+    font-weight: 800;
+}
+
+
+/* transparent color*/
+.transparentColor {
+    color: transparent;
+}
+
+/* banner */
+.head {
+    h1 {
+        font-size: 45px;
+        font-weight: bold;
+    }
+
+    .allignContainer {
+        height: 300px;
+
+        img.centered {
+            width: 100%;
+        }
+    }
+}
+
+/* sprites */
+.stitches-sprite(@x: 0, @y: 0, @width: 0, @height: 0) {
+    background-position: @x @y;
+    width: @width;
+    height: @height;
+}
+
+.sprite {
+    background-image: url(images/spritesheet.png);    background-repeat: no-repeat;
+    display: block;
+
+    &.sprite-flag-de {
+        .stitches-sprite(-5px, -5px, 22px, 22px);
+    }
+
+    &.sprite-flag-es {
+        .stitches-sprite(-5px, -37px, 22px, 22px);
+    }
+
+    &.sprite-flag-en {
+        .stitches-sprite(-5px, -69px, 22px, 22px);
+    }
+}
+
+
+/* device dependent styles */
+
+@media (max-width:768px) {
+    .head {
+        .allignContainer {
+            height: 190px;
+
+            img.centered {
+                width: 1300px;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1000px) {
+    .head {
+        .allignContainer {
+            height: 200px;
+
+            img.centered {
+                width: 1400px;
+            }
+        }
+    }
+
+    html .width69 {
+        width: 69.8%;
+    }
+}
+
+@media (min-width: 1000px) and (max-width: 1400px) {
+    .head {
+        .allignContainer {
+            height: 250px;
+
+            img.centered {
+                width: 1500px;
+            }
+        }
+    }
+
+    html .width69 {
+        width: 69.8%;
+    }
+}
+
+@media (min-width: 1400px) {
+    .head {
+        .allignContainer {
+            height: 300px;
+
+            img.centered {
+                width: 100%;
+            }
+        }
+    }
+
+    html .width69 {
+        width: 69.8%;
+    }
+}

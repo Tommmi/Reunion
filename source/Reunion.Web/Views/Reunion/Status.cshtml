@@ -1,0 +1,178 @@
+﻿@*
+    Required:
+        Model: Reunion.Web.Models.ReunionStatusViewModel
+*@
+
+@using Reunion.Common.Model
+@using Reunion.Common
+@using Reunion.Common.Model.States
+@using Reunion.Web.Controllers
+@using Reunion.Web.Resources
+@using Reunion.Web.Models
+@using TUtils.Common.MVC
+@using System.Threading
+
+@model ReunionStatusViewModel
+@{
+    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.ReunionStatusTitle);
+    var currentCulture = Thread.CurrentThread.CurrentCulture;
+    var shortDatePattern = currentCulture.DateTimeFormat.ShortDatePattern;
+}
+
+@section body
+{
+    <div class="wrapper clearfix">
+        <div class="pull-left"><h1>@Model.Reunion.Name</h1></div>
+        @if (Model.OrganizatorStatus == OrganizatorStatusEnum.Created)
+        {
+            <div class="pull-right">
+                @Html.RenderConfirmationModalDlgEx(
+                    modalDlgId: "startPlanning",
+                    linkButtonText: Resource1.StartPlanning,
+                    htmlAttributes: new {@class = "btn btn-lg btn-success h1"},
+                    dlgText: Resource1.StartPlanningConfirmation,
+                    no: Resource1.No,
+                    buttonOnOkHtml: Html.RenderMailLink(
+                        to: Model.InvitationMailContent.ReceipientMailAddresses,
+                        cc: null,
+                        bcc: null,
+                        subject: Model.InvitationMailContent.Subject,
+                        textBody: Model.InvitationMailContent.Body,
+                        linkText: Resource1.Start,
+                        htmlAttributes: new
+                        {
+                            @class = "btn btn-success",
+                            target = "mailto",
+                            onclick = $"window.location.assign('{Url.Action(actionName: nameof(ReunionController.StartPlanning), routeValues: new {id = Model.Reunion.Id})}');return true;"
+                        }).ToString())
+            </div>
+            <iframe name="mailto" src="about:blank" style="display:none;"></iframe>
+        }
+        <div class="pull-right">
+            @Html.ActionLink(
+                    linkText: Resource1.Edit,
+                    actionName: nameof(ReunionController.Edit),
+                    routeValues: new { id = Model.Reunion.Id },
+                    htmlAttributes: new { @class = "btn btn-lg btn-primary h1" })
+        </div>
+    </div>
+
+    <div class="properties">
+        @DisplayProperty(Resource1.ReunionStatusTitle, Model.StatusDisplayText)
+        @DisplayProperty(Resource1.Deadline, Model.Reunion.Deadline.ToString(shortDatePattern))
+        @if (Model.Reunion.DeactivatedParticipants != null)
+        {
+            @DisplayProperty(Resource1.DeactivatedParticipants, Model.Reunion.DeactivatedParticipants)
+        }
+        @if (Model.Reunion.FinalInvitationDate.HasValue)
+        {
+            @DisplayProperty(Resource1.FinalDate, Model.Reunion.FinalInvitationDate.Value.ToString(shortDatePattern))
+        }
+        @DisplayProperty(Resource1.Participants, RenderParticipants().ToString())
+        @DisplayProperty(Resource1.DateRanking, RenderDates().ToString())
+    </div>
+}
+
+@helper DisplayProperty(string label, string value)
+{
+    <div class="row">
+        <div class="col-sm-2 keyName">
+            @label
+        </div>
+        <div class="col-sm-10 detail">
+            @Html.Raw(value)
+        </div>
+    </div>
+}
+
+@helper RenderParticipants()
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>@Resource1.ParticipantName</th>
+                <th>@Resource1.ParticipantStatus</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var participant in Model.Participants.OrderByDescending(p => p.IsRequired).ThenBy(p => p.Name))
+            {
+                <tr class="@(participant.IsWarningStatus ? "warn" : "")">
+                    <td>@participant.Name</td>
+                    <td>@participant.CurrentStateText</td>
+                    <td>
+                        @Html.RenderMailLink(
+                            to: new[] { participant.Mail },
+                            cc: null,
+                            bcc: null,
+                            subject: participant.GetLocalizedText(
+                                Model.OrganizatorStatus == OrganizatorStatusEnum.FinalInvitation ? nameof(Resource1.FinalInvitationMailSubject) : nameof(Resource1.InvitationMailSubject),
+                                Model.Reunion.Name),
+                            textBody: participant.GetLocalizedText(
+                                Model.OrganizatorStatus == OrganizatorStatusEnum.FinalInvitation ? nameof(Resource1.FinalInvitationMailBodyParticipantText) : nameof(Resource1.InvitationMailBodyParticipantText),
+                                Model.Reunion.Name,
+                                Model.Reunion.InvitationText,
+                                Model.Reunion.Deadline.ToString(participant.Culture.DateTimeFormat.ShortDatePattern),
+                                participant.DirectLink),
+                            linkText: Model.OrganizatorStatus == OrganizatorStatusEnum.FinalInvitation ? Resource1.ResendFinalInvitation : Resource1.ResendInvitation,
+                            htmlAttributes: null);
+                    </td>
+
+                </tr>
+}
+        </tbody>
+    </table>
+
+}
+
+@helper RenderDates()
+{
+        var currentCulture = @Thread.CurrentThread.CurrentCulture;
+        var shortDatePattern = currentCulture.DateTimeFormat.ShortDatePattern;
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                @if (Model.OrganizatorStatus == OrganizatorStatusEnum.DateProposal)
+        {
+                    <th></th>
+}
+                <th>@Resource1.Date</th>
+                <th>@Resource1.AcceptedParticipants</th>
+                <th>@Resource1.RefusingParticipants</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dateProposal in Model.DateProposals)
+        {
+            var dateAsString = dateProposal.Date.ToString(shortDatePattern);
+            var dlgId = "confirm" + dateProposal.Date.ToString("yyMMdd");
+                <tr>
+                    @if (Model.OrganizatorStatus == OrganizatorStatusEnum.DateProposal)
+                    {
+                        <td>
+                            @if (dateProposal.AllRequiredAccepted)
+                            {
+                                <a href="#@(dlgId)" data-toggle="modal" class="btn btn-primary">@Resource1.FinallyInvite</a>
+                                @Html.RenderConfirmationModalDlg(
+                                    modalDlgId: dlgId,
+                                    title: Resource1.FinallyInvite,
+                                    dlgText: string.Format(Resource1.ConfirmFinalInvitation, dateAsString),
+                                    yes: Resource1.Yes,
+                                    no: Resource1.No,
+                                    hrefOnOk: Url.Action(
+                                        actionName: nameof(ReunionController.FinalInvite),
+                                        routeValues: new { id = Model.Reunion.Id, date = dateProposal.Date.ToString("dd.MM.yyyy") }))
+}
+                        </td>
+}
+                    <td @(Html.Raw(dateProposal.AllRequiredAccepted ? "class=\"found\"" : ""))>@dateAsString</td>
+                    <td>@dateProposal.AcceptingParticipants</td>
+                    <td>@dateProposal.RefusingParticipants</td>
+                </tr>
+}
+        </tbody>
+    </table>
+
+}

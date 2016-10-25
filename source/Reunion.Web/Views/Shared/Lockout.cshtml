@@ -1,0 +1,14 @@
+﻿@using Reunion.Web.Resources
+@using Reunion.Web.Models
+@{
+    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.LockedOutViewTitle);
+}
+@model System.Web.Mvc.HandleErrorInfo
+
+@section body
+{
+    <hgroup>
+        <h1 class="text-danger">Locked out.</h1>
+        <h2 class="text-danger">This account has been locked out, please try again later.</h2>
+    </hgroup>
+}

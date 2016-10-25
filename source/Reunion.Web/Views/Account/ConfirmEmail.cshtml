@@ -1,0 +1,22 @@
+﻿@using Reunion.Web.Resources
+@using Reunion.Web.Models
+@{
+    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.ConfirmEmailViewTitle);
+}
+
+@section body
+{
+    <h2>@Resource1.ConfirmEmailViewTitle.</h2>
+    <div>
+        <p>
+            @Resource1.AccountThankYouForConfirmingYourEmail @Html.Raw(string.Format(
+                Resource1.AccountPleaseClickHereToLogin1,
+                Html.ActionLink(
+                    Resource1.AccountPleaseClickHereToLogin2,
+                    "Login",
+                    "Account",
+                    routeValues: null,
+                    htmlAttributes: new {id = "loginLink"})))
+        </p>
+    </div>
+}

@@ -1,0 +1,11 @@
+﻿@using Reunion.Web.Resources
+@using Reunion.Web.Models
+@{
+    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.AboutViewTitle);
+}
+@section body
+{
+    <h3>@ViewBag.Message</h3>
+
+    <p>Use this area to provide additional information.</p>
+}

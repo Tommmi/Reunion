@@ -1,0 +1,54 @@
+﻿@*
+    Required:
+        ViewBag.ShowLanguageSwitch (default: true)
+*@
+@using System.Globalization
+@using Reunion.Web.Resources
+@using Microsoft.AspNet.Identity
+@using System.Threading
+@using Reunion.Web.Common
+@using TUtils.Common.Extensions
+@using TUtils.Common.MVC
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            @LanguageMenuItem()
+            <li>
+                @Html.ActionLink(Resource1.HelloYou + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new {title = Resource1.AccountManage})
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        @LanguageMenuItem()
+        <li>@Html.ActionLink(Resource1.MenuItemRegisterTitle, "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink(Resource1.MenuItemLoginTitle, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+
+@helper LanguageMenuItem()
+{
+    if (!ViewData.ContainsKey("ShowLanguageSwitch") || ViewBag.ShowLanguageSwitch)
+    {
+        var currentUri = Request.Url;
+        var uriPattern = currentUri.RemoveQueryParameter("language").AddQueryParameters(new KeyValuePair<string, string>("language", "{0}")).ToString();
+
+        <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="sprite sprite-flag-@(Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant())"></i></a>
+            <ul role="menu" class="dropdown-menu">
+                @foreach (var languageIsoCode in AppSettings.SupportedTwoLetterLanguageIsoCodes)
+                {
+                    <li><a href="@(string.Format(uriPattern,languageIsoCode))"><i class="sprite sprite-flag-@(languageIsoCode)"></i></a></li>
+                }
+            </ul>
+        </li>
+    }
+}

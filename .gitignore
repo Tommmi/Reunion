@@ -158,6 +158,9 @@ publish/
 *.nuget.props
 *.nuget.targets
 
+#password filled web.config
+Web-original.config
+
 # Microsoft Azure Build Output
 csx/
 *.build.csdef

@@ -1,0 +1,131 @@
+﻿@*
+    Required:
+        Model: Reunion.Web.Models.ParticipantFeedbackViewModel
+
+
+*@
+@using Reunion.Web.Resources
+@using Reunion.Web.Models
+@using TUtils.Common.Extensions
+@using TUtils.Common.MVC
+@using Reunion.Web.Controllers
+@using System.Threading
+
+@model ParticipantFeedbackViewModel
+@{
+    ViewBag.LayoutVM = new LayoutViewModel(title: Model.GetLocalizedText(nameof(Resource1.TitleParticipantView)));
+    var culture = Model.Culture;
+    var dateFormat = culture.DateTimeFormat.ShortDatePattern;
+    ViewBag.OrganizerMode = false;
+    ViewBag.TimeRangesOfOrganizer = Model.TimeRangesOfOrganizer;
+    bool anyMonthsMissing = Model.UnsetMonths.Any();
+    string monthsMissing = string.Empty;
+    if (anyMonthsMissing)
+    {
+
+        var sameYear = Model.UnsetMonths.Select(m => m.Year).Distinct().Count() == 1;
+
+        foreach (var unsetMonth in Model.UnsetMonths)
+        {
+            monthsMissing += sameYear ? string.Format(culture, "{0:MMMM} ", unsetMonth) : string.Format(culture, "{0:M yyyy} ", unsetMonth);
+        }
+    }
+}
+
+@section body
+{
+    <h1>@Model.GetLocalizedText(nameof(Resource1.TitleParticipantView))</h1>
+    <hr />
+
+    @if (Model.FinalInvitationDate.HasValue)
+    {
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    @(Model.GetLocalizedText(nameof(Resource1.DateFound))) @(Model.HasAcceptedFinalInvitationdate.HasValue
+                                                                            ? "/ " + (Model.HasAcceptedFinalInvitationdate.Value
+                                                                                      ? Model.GetLocalizedText(nameof(Resource1.InvitationAccepted))
+                                                                                      : Model.GetLocalizedText(nameof(Resource1.InvitationRejected)))
+                                                                            : string.Empty)
+                </h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    @Html.Raw(Model.GetLocalizedText(nameof(Resource1.QuestionFinalInvitation), Model.FinalInvitationDate.Value.ToString(dateFormat)))
+                </p>
+                @if (!Model.HasAcceptedFinalInvitationdate.HasValue || !Model.HasAcceptedFinalInvitationdate.Value)
+                {
+                    <a href="@Url.Action(nameof(ParticipantController.AcceptFinalDate), routeValues: new {id = Model.UnguessableParticipantId})"
+                       class="btn btn-success">
+                        @Model.GetLocalizedText(nameof(Resource1.AcceptFinalDate))
+                    </a>
+                }
+                @if (!Model.HasAcceptedFinalInvitationdate.HasValue || Model.HasAcceptedFinalInvitationdate.Value)
+                {
+                    @Html.RenderConfirmationModalDlg(
+                        modalDlgId: "confirmRejection",
+                        linkButtonText: Model.GetLocalizedText(nameof(Resource1.RejectFinaldateOnly)),
+                        htmlAttributes: new {@class = "btn btn-danger"},
+                        dlgText: Model.GetLocalizedText(nameof(Resource1.ConfirmFinaldateRejection), Model.FinalInvitationDate.Value.ToString(dateFormat)),
+                        yes: Resource1.RejectFinaldateOnly,
+                        no: Resource1.Cancel,
+                        hrefOnOk: Url.Action(nameof(ParticipantController.RejectFinalDateOnly), routeValues: new {id = Model.UnguessableParticipantId}));
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.FinalInvitationDate.HasValue)
+    {
+        <a data-toggle="collapse" href="#collapseOne">@Model.GetLocalizedText(nameof(Resource1.UpdateMyPreferences))</a>
+        @:<div class="collapse" id="collapseOne">
+    }
+
+    @using (Html.BeginForm(
+        actionName:nameof(ParticipantController.Edit),
+        controllerName:nameof(ParticipantController).RemoveController(),
+        method:FormMethod.Post,
+        htmlAttributes:new { @class = "form-horizontal", role = "form"}))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(excludePropertyErrors: true, message: Model.GetLocalizedText(nameof(Resource1.ErrValidationErrorsOccured)), htmlAttributes: new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.UnguessableParticipantId)
+
+
+        <p class="info">
+            @(Html.Raw(Model.GetLocalizedText(nameof(Resource1.HelloParticipant), Model.ParticipantName)))
+        </p>
+        if (anyMonthsMissing)
+        {
+            <p class="info text-danger">
+                @(Html.Raw(Model.GetLocalizedText(nameof(Resource1.MonthsMissing), monthsMissing)))
+            </p>
+        }
+        @Html.EditorFor(m => m.PossibleDates)
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <button type="submit" class="btn btn-primary">@Model.GetLocalizedText(nameof(Resource1.Save))</button>
+                @Html.RenderConfirmationModalDlg(
+                    modalDlgId: "confirmRejectionComplete",
+                    linkButtonText: Model.GetLocalizedText(nameof(Resource1.RejectComplete)),
+                    htmlAttributes: new { @class = "btn btn-danger" },
+                    dlgText: Model.GetLocalizedText(nameof(Resource1.ConfirmCompleteRejection)),
+                    yes: Resource1.Yes,
+                    no: Resource1.No,
+                    hrefOnOk: Url.Action(
+                        nameof(ParticipantController.RejectCompletely),
+                        routeValues: new { id = Model.UnguessableParticipantId }))
+            </div>
+        </div>
+    }
+    @if (Model.FinalInvitationDate.HasValue)
+    {
+        @:</div>
+    }
+}
+@section scripts
+{
+    @Scripts.Render("~/bundles/calendar")
+}

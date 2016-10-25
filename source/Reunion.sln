@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reunion.Common", "Reunion.Common\Reunion.Common.csproj", "{73D68F14-27D1-49AE-BAC6-256533ED9B7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reunion.DAL", "Reunion.DAL\Reunion.DAL.csproj", "{B10E98B0-40FF-4352-A6CE-8AA0AB7C4528}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reunion.BL", "Reunion.BL\Reunion.BL.csproj", "{96F2D6D0-00F6-41F4-BEEB-8DDE0DA136F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reunion.Scripts", "Reunion.Scripts\Reunion.Scripts.csproj", "{93BE28D9-6F50-4849-AE72-428433B91169}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reunion.Web", "Reunion.Web\Reunion.Web.csproj", "{80075CC6-16BD-4E6A-9664-11AD6C8B2FFE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{166EB8A1-7A10-4A5D-B4E1-7BD6CB3CC33F}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73D68F14-27D1-49AE-BAC6-256533ED9B7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73D68F14-27D1-49AE-BAC6-256533ED9B7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73D68F14-27D1-49AE-BAC6-256533ED9B7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73D68F14-27D1-49AE-BAC6-256533ED9B7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B10E98B0-40FF-4352-A6CE-8AA0AB7C4528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B10E98B0-40FF-4352-A6CE-8AA0AB7C4528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B10E98B0-40FF-4352-A6CE-8AA0AB7C4528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B10E98B0-40FF-4352-A6CE-8AA0AB7C4528}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96F2D6D0-00F6-41F4-BEEB-8DDE0DA136F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96F2D6D0-00F6-41F4-BEEB-8DDE0DA136F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96F2D6D0-00F6-41F4-BEEB-8DDE0DA136F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96F2D6D0-00F6-41F4-BEEB-8DDE0DA136F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93BE28D9-6F50-4849-AE72-428433B91169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93BE28D9-6F50-4849-AE72-428433B91169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93BE28D9-6F50-4849-AE72-428433B91169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93BE28D9-6F50-4849-AE72-428433B91169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80075CC6-16BD-4E6A-9664-11AD6C8B2FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80075CC6-16BD-4E6A-9664-11AD6C8B2FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80075CC6-16BD-4E6A-9664-11AD6C8B2FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80075CC6-16BD-4E6A-9664-11AD6C8B2FFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

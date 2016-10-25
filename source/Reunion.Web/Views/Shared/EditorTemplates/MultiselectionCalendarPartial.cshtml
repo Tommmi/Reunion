@@ -1,0 +1,112 @@
+﻿@*
+    Required:
+        Model: string: example: "2:12.06.2016-20.06.2016;4:25.06.2016-25.06.2016"
+            Date ranges
+        ViewData.ModelMetadata.PropertyName:
+            normally this value is set by Html.EditorFor(model=>model.PossibleDates)
+            It's the name of the input field, which contains the string encoded date ranges / this model
+        ViewBag.OrganizerMode:
+            true: - no dates may be marked as PreferenceEnum.MayBe
+                  - no dates may be marked as PreferenceEnum.NoWay
+            false:- no dates may be marked as PreferenceEnum.None
+        ViewBag.TimeRangesOfOrganizer: IEnumerable<TimeRange>
+            valid only if ViewBag.OrganizerMode == false
+            Time preferences of organizer
+    Optional:
+        ViewBag.LanguageIsoCode
+*@
+@using System.Threading
+@using MultiSelectionCalendar
+@using Reunion.Web.Resources
+@using Reunion.Common.Model
+@model string
+@{
+    var currentLanguageIsoCode = Thread.CurrentThread.CurrentCulture?.TwoLetterISOLanguageName ?? "de";
+    if (ViewData.ContainsKey("LanguageIsoCode"))
+    {
+        currentLanguageIsoCode = ViewBag.LanguageIsoCode;
+    }
+    var now = DateTime.Now.Date;
+    var in20Years = now.AddYears(20);
+    var in20YearsFormatted = in20Years.ToString("dd.MM.yyyy");
+    var dateRanges = (Model ?? "").GetDateRangesFromString();
+    var minDateOfSelectedRange = dateRanges.OrderBy(r => r.Start).FirstOrDefault()?.Start??now;
+    string startDateOfEnabledRange;
+
+    if (minDateOfSelectedRange < now) // let old selected dates be editable
+    {
+        startDateOfEnabledRange = minDateOfSelectedRange.ToString("dd.MM.yyyy");
+    }
+    else
+    {
+        startDateOfEnabledRange = now.ToString("dd.MM.yyyy");
+    }
+
+    bool isOrganizerMode = ViewBag.OrganizerMode;
+
+    string enabledRanges;
+
+    if (isOrganizerMode)
+    {
+        enabledRanges = $"{startDateOfEnabledRange}-{in20YearsFormatted}";
+    }
+    else
+    {
+        IEnumerable<TimeRange> organizersTimeRanges = ViewBag.TimeRangesOfOrganizer;
+        enabledRanges = Calendar.GetStringFromDateRanges(
+            organizersTimeRanges
+                .Where(r => r.Preference != PreferenceEnum.NoWay && r.Preference != PreferenceEnum.None)
+                .Select(r => new Range(r.Start, r.End, 0))
+                .ToList());
+    }
+}
+<div class="calendar-input row ng-cloak" ng-controller="CalendarController" ngCloak>
+    <div class="col-xs-8 col-sm-7">
+        <input id="@ViewData.ModelMetadata.PropertyName"
+               name="@ViewData.ModelMetadata.PropertyName"
+               type="text"
+               class="multiSelectionCalendar"
+               selectionidx="{{currentCalendarSelectionIdx}}"
+               value="@Model"
+               enabledRanges="@enabledRanges"
+               language="@currentLanguageIsoCode" />
+    </div>
+    <div class="col-xs-4  col-sm-5">
+        <div class="radio">
+            <label>
+                <input type="radio" ng-model="currentCalendarSelectionIdx" value=@((int) PreferenceEnum.PerfectDay)>
+                <span class="rectanglePerfect">&nbsp;</span>@Resource1.PerfectDay
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" ng-model="currentCalendarSelectionIdx" value=@((int) PreferenceEnum.Yes)>
+                <span class="rectangleYes">&nbsp;</span>@Resource1.Yes
+            </label>
+        </div>
+    @if (ViewBag.OrganizerMode)
+    {
+        <div class="radio">
+            <label>
+                <input type="radio" ng-model="currentCalendarSelectionIdx" value=@((int) PreferenceEnum.None)>
+                <span class="rectangleNo">&nbsp;</span>@Resource1.No
+            </label>
+        </div>
+    }
+    else
+    {
+        <div class="radio">
+            <label>
+                <input type="radio" ng-model="currentCalendarSelectionIdx" value=@((int) PreferenceEnum.MayBe)>
+                <span class="rectangleMaybe">&nbsp;</span>@Resource1.Maybe
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" ng-model="currentCalendarSelectionIdx" value=@((int) PreferenceEnum.NoWay)>
+                <span class="rectangleNoWay">&nbsp;</span>@Resource1.No
+            </label>
+        </div>
+    }
+    </div>
+</div>
