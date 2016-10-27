@@ -3,12 +3,15 @@
 :: %2: debug release
 :: %3: solution dir
 
+
+
 ::**********************************************************
-:: copy bootstrap
+:: fix error "error ASPCONFIG: It is an error to use a section registered as allowDefinition='MachineToApplication' beyond application level. This error can be caused by a virtual directory not being configured as an application in IIS.""
 ::**********************************************************
-:: copy %3packages\bootstrap.3.3.7\content\Content\*.css %1Content\*.css
-:: copy %3packages\bootstrap.3.3.7\fonts\*.* %1fonts\*.*
-:: copy %3packages\bootstrap.3.3.7\Scripts\*.js %1Scripts\*.js
+rd "%1obj" /S /Q
+md "%1obj"
+md "%1obj\Debug"
+md "%1obj\Release"
 
 ::**********************************************************
 :: copy jquery.ui
@@ -46,10 +49,6 @@ copy %3packages\angularjs.1.5.8\content\Scripts\angular-cookies.min.js %1Scripts
 copy %1..\external\MultiSelectionCalendar\Scripts\*.js %1Scripts\*.js
 copy %1..\external\MultiSelectionCalendar\Styles\*.* %1Content\*.*
 
-::**********************************************************
-:: copy Web.config
-::**********************************************************
-if exist %1Web-original.config copy %1Web-original.config %1Web.config
 						
 ::**********************************************************
 :: generate stylesheet from LESS

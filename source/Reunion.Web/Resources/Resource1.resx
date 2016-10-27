@@ -374,7 +374,7 @@
     <value>English</value>
   </data>
   <data name="MayContactByWebservice" xml:space="preserve">
-    <value>may be contacted by &lt;span class='productname'&gt;Reunion&lt;/span&gt;</value>
+    <value>may be contacted by &lt;span class='productname'&gt;Reunion&lt;/span&gt; without any prior warning.</value>
   </data>
   <data name="ContactFirstTimePersonally" xml:space="preserve">
     <value>First contact only via my email address</value>
@@ -710,5 +710,8 @@ meeting directly. A registration on this web portal isn't necessary.</value>
   </data>
   <data name="InvitationRejected" xml:space="preserve">
     <value>You have rejected</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Log off</value>
   </data>
 </root>

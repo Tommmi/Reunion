@@ -364,7 +364,7 @@
     <value>Englisch</value>
   </data>
   <data name="MayContactByWebservice" xml:space="preserve">
-    <value>darf von &lt;span class='productname'&gt;Reunion&lt;/span&gt; kontaktet werden</value>
+    <value>darf von Anfang an von &lt;span class='productname'&gt;Reunion&lt;/span&gt; kontaktet werden</value>
   </data>
   <data name="ContactFirstTimePersonally" xml:space="preserve">
     <value>Erster Kontakt nur über meine Mailaddresse</value>
@@ -704,5 +704,8 @@ ist nicht erforderlich.</value>
   </data>
   <data name="InvitationRejected" xml:space="preserve">
     <value>Du hast abgesagt</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Abmelden</value>
   </data>
 </root>

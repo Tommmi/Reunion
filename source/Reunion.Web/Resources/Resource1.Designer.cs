@@ -1163,6 +1163,15 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log off.
+        /// </summary>
+        public static string Logout {
+            get {
+                return ResourceManager.GetString("Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open ongoing planning.
         /// </summary>
         public static string ManageExistingReunion {
@@ -1181,7 +1190,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to may be contacted by &lt;span class=&apos;productname&apos;&gt;Reunion&lt;/span&gt;.
+        ///   Looks up a localized string similar to may be contacted by &lt;span class=&apos;productname&apos;&gt;Reunion&lt;/span&gt; without any prior warning..
         /// </summary>
         public static string MayContactByWebservice {
             get {

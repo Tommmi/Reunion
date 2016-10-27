@@ -21,7 +21,7 @@
             <li>
                 @Html.ActionLink(Resource1.HelloYou + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new {title = Resource1.AccountManage})
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">@Resource1.Logout</a></li>
         </ul>
     }
 }
