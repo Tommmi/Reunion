@@ -73,10 +73,7 @@
                 }
             </div>
         </div>
-    }
 
-    @if (Model.FinalInvitationDate.HasValue)
-    {
         <a data-toggle="collapse" href="#collapseOne">@Model.GetLocalizedText(nameof(Resource1.UpdateMyPreferences))</a>
         @:<div class="collapse" id="collapseOne">
     }
@@ -85,7 +82,7 @@
         actionName:nameof(ParticipantController.Edit),
         controllerName:nameof(ParticipantController).RemoveController(),
         method:FormMethod.Post,
-        htmlAttributes:new { @class = "form-horizontal", role = "form"}))
+        htmlAttributes:new { @class = "form-horizontal", role = "form", name="myForm"}))
     {
         @Html.AntiForgeryToken()
 
@@ -106,7 +103,7 @@
 
         <div class="form-group">
             <div class="col-md-10">
-                <button type="submit" class="btn btn-primary">@Model.GetLocalizedText(nameof(Resource1.Save))</button>
+                <button type="submit" enableOnFormIsDirty class="btn btn-primary">@Model.GetLocalizedText(nameof(Resource1.Save))</button>
                 @Html.RenderConfirmationModalDlg(
                     modalDlgId: "confirmRejectionComplete",
                     linkButtonText: Model.GetLocalizedText(nameof(Resource1.RejectComplete)),
@@ -128,4 +125,7 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/calendar")
+    <script>
+        Saltarelle.Utils.IsDirtyCheck.init();
+    </script>
 }

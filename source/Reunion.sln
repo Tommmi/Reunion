@@ -12,6 +12,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reunion.Scripts", "Reunion.Scripts\Reunion.Scripts.csproj", "{93BE28D9-6F50-4849-AE72-428433B91169}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reunion.Web", "Reunion.Web\Reunion.Web.csproj", "{80075CC6-16BD-4E6A-9664-11AD6C8B2FFE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{93BE28D9-6F50-4849-AE72-428433B91169} = {93BE28D9-6F50-4849-AE72-428433B91169}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{166EB8A1-7A10-4A5D-B4E1-7BD6CB3CC33F}"
 	ProjectSection(SolutionItems) = preProject

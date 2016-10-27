@@ -310,6 +310,7 @@
     <Content Include="Content\images\ui-icons_777777_256x240.png" />
     <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
     <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\multiselectioncalendar.css">
       <DependentUpon>multiselectioncalendar.less</DependentUpon>
     </Content>
@@ -334,11 +335,14 @@
     </Content>
     <Content Include="prebuild.bat" />
     <Content Include="Content\Reunion.less" />
+    <Content Include="Scripts\datepicker-de.js" />
+    <Content Include="Scripts\datepicker-es.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Content\multiselectioncalendar.less" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Scripts\jquery.mousewheel.js" />
     <Content Include="Scripts\jquery.mousewheel.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\linq.js" />

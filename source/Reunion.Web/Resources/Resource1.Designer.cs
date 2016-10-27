@@ -1024,7 +1024,7 @@ namespace Reunion.Web.Resources {
         ///To find a suitable date, the web service &quot;Reunion&quot; is used.
         ///&quot;Reunion&quot; may have sent you already a mail from {3} containing a personal link to &quot;Reunion&quot;.
         ///If you did not receive the email yet, please also check your spam folder.
-        ///With the containing link you can - without having to log you in particular - immediately enter your preferred dates.
+        ///With the containing link you can immediately enter your preferred dates without having to log you in particulary.
         ///If you can not come in the given period, you can note this on that site as well.
         ///.
         /// </summary>

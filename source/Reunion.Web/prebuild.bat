@@ -21,9 +21,10 @@ md "%1obj\Release"
 :: copy %1..\external\jquery-ui-1.12.0.custom\images\*.* %1Content\images\*.*
 copy %1..\external\jquery-ui-1.12.0.custom\languages\datepicker-de.js %1Scripts\datepicker-de.js
 copy %1..\external\jquery-ui-1.12.0.custom\languages\datepicker-es.js %1Scripts\datepicker-es.js
+copy %1..\external\jquery-ui-1.12.0.custom\jquery-ui.theme.min.css %1Content\jquery-ui.theme.min.css
 
 ::**********************************************************
-:: copy jquery.ui
+:: copy jquery.validation
 ::**********************************************************
 copy %1..\external\jQuery.Validation.1.11.1\Content\Scripts\*.js %1Scripts\*.js
 

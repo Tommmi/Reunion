@@ -89,7 +89,7 @@ namespace Reunion.Web
 				minimumWaitTimeSeconds: 3 * 60, // 2*24*3600,
 				startPage4Participant: diContainer.Get<IAppSettings>().StartPage4Participant,
 				statusPageOfReunion: diContainer.Get<IAppSettings>().StatusPageOfReunion,
-				mailAddressOfReunion: mailAddressOfReunion.DisplayName));
+				mailAddressOfReunion: mailAddressOfReunion.Address));
 
 			container.RegisterSingleton<ILanguagesService, LanguagesService>();
 
