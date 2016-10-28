@@ -43,6 +43,27 @@ namespace Reunion.Web.Models
 			InvitationMailContent = invitationMailContent;
 		}
 
+		public bool RequiredParticipantDidntAnswered
+		{
+			get
+			{
+				return _participants.Any(p =>
+					p.Item1.IsRequired
+					&& (p.Item2 == ParticipantStatusEnum.ReactionOnFinalInvitationMissing
+					    || p.Item2 == ParticipantStatusEnum.ReactionOnInvitationMissing));
+			}
+		}
+
+		public bool ParticipantDidntAnswered
+		{
+			get
+			{
+				return _participants.Any(p =>
+					p.Item2 == ParticipantStatusEnum.ReactionOnFinalInvitationMissing
+					|| p.Item2 == ParticipantStatusEnum.ReactionOnInvitationMissing);
+			}
+		}
+
 		public ReunionEntity Reunion { get; set; }
 		public IEnumerable<DateProposal> DateProposals { get; set; }
 		public InvitationMailContent InvitationMailContent { get; set; }

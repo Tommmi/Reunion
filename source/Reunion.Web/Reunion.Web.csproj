@@ -302,6 +302,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\50K.jpg" />
+    <Content Include="Content\images\Face-blush.svg" />
+    <Content Include="Content\images\Face-crying.svg" />
+    <Content Include="Content\images\Face-grin.svg" />
+    <Content Include="Content\images\Face-plain.svg" />
+    <Content Include="Content\images\Face-sad.svg" />
+    <Content Include="Content\images\Face-smile.svg" />
+    <Content Include="Content\images\Face-surprise.svg" />
+    <Content Include="Content\images\Face-wink.svg" />
     <Content Include="Content\images\reunion5-hd.jpg" />
     <Content Include="Content\images\spritesheet.png" />
     <Content Include="Content\images\ui-icons_444444_256x240.png" />

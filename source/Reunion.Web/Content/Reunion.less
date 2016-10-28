@@ -159,7 +159,18 @@ body.Status {
     .btn-success {
         margin-left:10px;
     }
-
+    .textBlob {
+        animation-name:textblob;
+        animation-duration:2s;
+        animation-delay:2s;
+        animation-timing-function:ease;
+    }
+    #smiley {
+        position:absolute;
+        margin: 0;
+        top: 50%;
+        transform: translate(0, -50%)    
+    }
     tr.warn {
         td + td {
             color: @colorAlert;
@@ -295,6 +306,67 @@ span.productname {
     }
 }
 
+/* animations */
+
+@-moz-keyframes textblob {
+	0% {
+		font-size: 100%;
+        position:absolute;
+	}
+	50% {
+		font-size: 130%;
+        font-weight:bold;
+        position:absolute;
+	}
+	99% {
+		font-size: 100%;
+        position:absolute;
+	}
+    100% {
+		font-size: 100%;
+        position:static;
+    }
+}
+
+@-webkit-keyframes textblob {
+	0% {
+		font-size: 100%;
+        position:absolute;
+	}
+	50% {
+		font-size: 130%;
+        font-weight:bold;
+        position:absolute;
+	}
+	99% {
+		font-size: 100%;
+        position:absolute;
+	}
+    100% {
+		font-size: 100%;
+        position:static;
+    }
+}
+
+@keyframes textblob {
+	0% {
+		font-size: 100%;
+        position:absolute;
+	}
+	50% {
+		font-size: 130%;
+        font-weight:bold;
+        position:absolute;
+	}
+	99% {
+		font-size: 100%;
+        position:absolute;
+	}
+    100% {
+		font-size: 100%;
+        position:static;
+    }
+}
 
 /* device dependent styles */
 

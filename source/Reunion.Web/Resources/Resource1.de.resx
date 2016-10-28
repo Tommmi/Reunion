@@ -274,13 +274,13 @@
     <value>Kontakt</value>
   </data>
   <data name="Disabled" xml:space="preserve">
-    <value>deaktiviert</value>
+    <value>Deaktiviert</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
   <data name="Enabled" xml:space="preserve">
-    <value>aktiviert</value>
+    <value>Aktiviert</value>
   </data>
   <data name="ErrAnErrorHasOccurred" xml:space="preserve">
     <value>Ein Fehler ist aufgetreten</value>
@@ -364,7 +364,7 @@
     <value>Englisch</value>
   </data>
   <data name="MayContactByWebservice" xml:space="preserve">
-    <value>darf von Anfang an von &lt;span class='productname'&gt;Reunion&lt;/span&gt; kontaktet werden</value>
+    <value>Darf von Anfang an von &lt;span class='productname'&gt;Reunion&lt;/span&gt; kontaktet werden</value>
   </data>
   <data name="ContactFirstTimePersonally" xml:space="preserve">
     <value>Erster Kontakt nur über meine Mailaddresse</value>
@@ -490,25 +490,25 @@ Falls Du in dem Zeitraum gar nicht kommen kannst, kannst Du das dort auch mittei
     <value>Einladung verschickt</value>
   </data>
   <data name="Answered" xml:space="preserve">
-    <value>geantworted</value>
+    <value>Geantworted</value>
   </data>
   <data name="NotAnswered1" xml:space="preserve">
-    <value>nicht geantwortet</value>
+    <value>Nicht geantwortet</value>
   </data>
   <data name="FinallyInvitated" xml:space="preserve">
-    <value>finale Einladung versendet</value>
+    <value>Finale Einladung versendet</value>
   </data>
   <data name="Rejected1" xml:space="preserve">
     <value>abgesagt</value>
   </data>
   <data name="NotAnswered2" xml:space="preserve">
-    <value>nicht geantwortet</value>
+    <value>Nicht geantwortet</value>
   </data>
   <data name="RejectedFinallyInvitation" xml:space="preserve">
-    <value>finale Einladung abgesagt</value>
+    <value>Finale Einladung abgesagt</value>
   </data>
   <data name="Accepted" xml:space="preserve">
-    <value>zugesagt</value>
+    <value>Zugesagt</value>
   </data>
   <data name="InvitationStopped" xml:space="preserve">
     <value>Treffen abgesagt</value>
@@ -560,7 +560,7 @@ Markiere bitte im Kalender Deine Terminwünsche bezüglich des Treffens.</value>
     <value>Für die folgenden Monate fehlen noch Deine Angaben: {0} </value>
   </data>
   <data name="FinallyInvite" xml:space="preserve">
-    <value>Einladung versenden ...</value>
+    <value>auswählen ...</value>
   </data>
   <data name="ConfirmFinalInvitation" xml:space="preserve">
     <value>Willst Du wirklich den {0} als abschließenden Termin für das Treffen festlegen ?</value>
@@ -652,7 +652,7 @@ Falls Du in dem Zeitraum gar nicht kommen kannst, kannst Du das dort ebenfalls m
     <value>Starten</value>
   </data>
   <data name="UpdateMyPreferences" xml:space="preserve">
-    <value>meine Angaben ändern ...</value>
+    <value>Meine Angaben ändern ...</value>
   </data>
   <data name="FinalInvitationMailBodyParticipantText" xml:space="preserve">
     <value>Hallo,
@@ -707,5 +707,11 @@ ist nicht erforderlich.</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Abmelden</value>
+  </data>
+  <data name="AddThisParticipant" xml:space="preserve">
+    <value>Diesen Teilnehmer hinzufügen</value>
+  </data>
+  <data name="NotYet" xml:space="preserve">
+    <value>Noch nicht</value>
   </data>
 </root>

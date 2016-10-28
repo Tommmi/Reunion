@@ -1,3 +1,10 @@
+# version 1.0.0.4 28.10.2016
+- bugfix: sending mail on a MAC
+- status view: smiley added, layout corrected, Resend button not always visible
+- Text changes
+- create a reunion: button renamed: "add this participant"
+- all scripts loaded by scheme https now
+- redirect to https
 # version 1.0.0.3 27.10.2016
 - JavaScript bug fixed: jquery-ui.theme.min.css was missing + modernizer was missing
 - The save button in participant's view enables automatically when participant enters data

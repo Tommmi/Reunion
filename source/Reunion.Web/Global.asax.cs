@@ -33,8 +33,9 @@ namespace Reunion.Web
 		}
 
 	    protected void Application_AcquireRequestState(object sender, EventArgs args)
-		{
-			var language = HttpContext.Current.Request.Url.GetQueryParameter("language");
+	    {
+		    var request = HttpContext.Current.Request;
+			var language = request.Url.GetQueryParameter("language");
 			CultureInfo culture;
 
 			if (language == null)

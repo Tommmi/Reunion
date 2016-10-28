@@ -374,13 +374,13 @@
     <value>English</value>
   </data>
   <data name="MayContactByWebservice" xml:space="preserve">
-    <value>may be contacted by &lt;span class='productname'&gt;Reunion&lt;/span&gt; without any prior warning.</value>
+    <value>Send also first invitation mail by &lt;span class='productname'&gt;Reunion&lt;/span&gt;.</value>
   </data>
   <data name="ContactFirstTimePersonally" xml:space="preserve">
     <value>First contact only via my email address</value>
   </data>
   <data name="LetAdminForwardMailToParticipantOnly" xml:space="preserve">
-    <value>communicate only indirectly over me</value>
+    <value>Communicate only indirectly over me</value>
   </data>
   <data name="ErrTextTooLong" xml:space="preserve">
     <value>"{0}" may have at maximum {1} characters</value>
@@ -495,46 +495,46 @@ If you can not come in the given period, you can note this on that site as well.
     <value>Best Date Proposals</value>
   </data>
   <data name="NotInvitatedYet" xml:space="preserve">
-    <value>invitation not sent yet</value>
+    <value>Invitation not sent yet</value>
   </data>
   <data name="PrimaryInvitationSent" xml:space="preserve">
-    <value>invitation sent</value>
+    <value>Invitation sent</value>
   </data>
   <data name="Answered" xml:space="preserve">
-    <value>answered</value>
+    <value>Answered</value>
   </data>
   <data name="NotAnswered1" xml:space="preserve">
-    <value>not answered</value>
+    <value>Not answered</value>
   </data>
   <data name="FinallyInvitated" xml:space="preserve">
-    <value>final invitation sent</value>
+    <value>Final invitation sent</value>
   </data>
   <data name="Rejected1" xml:space="preserve">
-    <value>refused</value>
+    <value>Refused</value>
   </data>
   <data name="NotAnswered2" xml:space="preserve">
-    <value>not answered</value>
+    <value>Not answered</value>
   </data>
   <data name="RejectedFinallyInvitation" xml:space="preserve">
-    <value>final invitation refused</value>
+    <value>Final invitation refused</value>
   </data>
   <data name="Accepted" xml:space="preserve">
-    <value>accepted</value>
+    <value>Accepted</value>
   </data>
   <data name="InvitationStopped" xml:space="preserve">
-    <value>reunion canceled</value>
+    <value>Reunion canceled</value>
   </data>
   <data name="DeadlineReached" xml:space="preserve">
-    <value>reunion canceled</value>
+    <value>Reunion canceled</value>
   </data>
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
   <data name="AcceptedParticipants" xml:space="preserve">
-    <value>accepting participants</value>
+    <value>Accepting participants</value>
   </data>
   <data name="RefusingParticipants" xml:space="preserve">
-    <value>refusing participants</value>
+    <value>Refusing participants</value>
   </data>
   <data name="ReunionManageTitle" xml:space="preserve">
     <value>Your reunions</value>
@@ -571,7 +571,7 @@ Could you please mark your preferred dates regarding the meeting in the calendar
     <value>For the following months there is still missing your statement: {0}</value>
   </data>
   <data name="FinallyInvite" xml:space="preserve">
-    <value>Invite ...</value>
+    <value>Choose ...</value>
   </data>
   <data name="ConfirmFinalInvitation" xml:space="preserve">
     <value>Do you really want to take the {0} for your reunion ?</value>
@@ -653,13 +653,13 @@ If you can not come in the given period, you can note this on that site as well.
 </value>
   </data>
   <data name="ResendInvitation" xml:space="preserve">
-    <value>resend invitation</value>
+    <value>Resend invitation</value>
   </data>
   <data name="Start" xml:space="preserve">
     <value>Start</value>
   </data>
   <data name="UpdateMyPreferences" xml:space="preserve">
-    <value>change my preferences ...</value>
+    <value>Change my preferences ...</value>
   </data>
   <data name="FinalInvitationMailBodyParticipantText" xml:space="preserve">
     <value>Hello,
@@ -673,7 +673,7 @@ If you already have indicated that you can not come on that day you needn't give
 This message was created automatically by the web service Reunion.</value>
   </data>
   <data name="ResendFinalInvitation" xml:space="preserve">
-    <value>resend final invitation</value>
+    <value>Resend final invitation</value>
   </data>
   <data name="Intro" xml:space="preserve">
     <value>Do you want to organize a meeting with friends, but don't know how to find a suitable day, 
@@ -713,5 +713,11 @@ meeting directly. A registration on this web portal isn't necessary.</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Log off</value>
+  </data>
+  <data name="AddThisParticipant" xml:space="preserve">
+    <value>Add this participant</value>
+  </data>
+  <data name="NotYet" xml:space="preserve">
+    <value>Not yet</value>
   </data>
 </root>

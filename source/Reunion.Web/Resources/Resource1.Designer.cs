@@ -70,7 +70,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to accepted.
+        ///   Looks up a localized string similar to Accepted.
         /// </summary>
         public static string Accepted {
             get {
@@ -79,7 +79,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to accepting participants.
+        ///   Looks up a localized string similar to Accepting participants.
         /// </summary>
         public static string AcceptedParticipants {
             get {
@@ -547,7 +547,16 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to answered.
+        ///   Looks up a localized string similar to Add this participant.
+        /// </summary>
+        public static string AddThisParticipant {
+            get {
+                return ResourceManager.GetString("AddThisParticipant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Answered.
         /// </summary>
         public static string Answered {
             get {
@@ -709,7 +718,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to reunion canceled.
+        ///   Looks up a localized string similar to Reunion canceled.
         /// </summary>
         public static string DeadlineReached {
             get {
@@ -927,7 +936,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to final invitation sent.
+        ///   Looks up a localized string similar to Final invitation sent.
         /// </summary>
         public static string FinallyInvitated {
             get {
@@ -936,7 +945,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invite ....
+        ///   Looks up a localized string similar to Choose ....
         /// </summary>
         public static string FinallyInvite {
             get {
@@ -1081,7 +1090,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to reunion canceled.
+        ///   Looks up a localized string similar to Reunion canceled.
         /// </summary>
         public static string InvitationStopped {
             get {
@@ -1145,7 +1154,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to communicate only indirectly over me.
+        ///   Looks up a localized string similar to Communicate only indirectly over me.
         /// </summary>
         public static string LetAdminForwardMailToParticipantOnly {
             get {
@@ -1190,7 +1199,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to may be contacted by &lt;span class=&apos;productname&apos;&gt;Reunion&lt;/span&gt; without any prior warning..
+        ///   Looks up a localized string similar to Send also first invitation mail by &lt;span class=&apos;productname&apos;&gt;Reunion&lt;/span&gt;..
         /// </summary>
         public static string MayContactByWebservice {
             get {
@@ -1280,7 +1289,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to not answered.
+        ///   Looks up a localized string similar to Not answered.
         /// </summary>
         public static string NotAnswered1 {
             get {
@@ -1289,7 +1298,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to not answered.
+        ///   Looks up a localized string similar to Not answered.
         /// </summary>
         public static string NotAnswered2 {
             get {
@@ -1298,11 +1307,20 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to invitation not sent yet.
+        ///   Looks up a localized string similar to Invitation not sent yet.
         /// </summary>
         public static string NotInvitatedYet {
             get {
                 return ResourceManager.GetString("NotInvitatedYet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not yet.
+        /// </summary>
+        public static string NotYet {
+            get {
+                return ResourceManager.GetString("NotYet", resourceCulture);
             }
         }
         
@@ -1361,7 +1379,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to invitation sent.
+        ///   Looks up a localized string similar to Invitation sent.
         /// </summary>
         public static string PrimaryInvitationSent {
             get {
@@ -1388,7 +1406,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to refusing participants.
+        ///   Looks up a localized string similar to Refusing participants.
         /// </summary>
         public static string RefusingParticipants {
             get {
@@ -1406,7 +1424,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to refused.
+        ///   Looks up a localized string similar to Refused.
         /// </summary>
         public static string Rejected1 {
             get {
@@ -1415,7 +1433,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to final invitation refused.
+        ///   Looks up a localized string similar to Final invitation refused.
         /// </summary>
         public static string RejectedFinallyInvitation {
             get {
@@ -1465,7 +1483,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to resend final invitation.
+        ///   Looks up a localized string similar to Resend final invitation.
         /// </summary>
         public static string ResendFinalInvitation {
             get {
@@ -1474,7 +1492,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to resend invitation.
+        ///   Looks up a localized string similar to Resend invitation.
         /// </summary>
         public static string ResendInvitation {
             get {
@@ -1672,7 +1690,7 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to change my preferences ....
+        ///   Looks up a localized string similar to Change my preferences ....
         /// </summary>
         public static string UpdateMyPreferences {
             get {
