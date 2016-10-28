@@ -161,7 +161,7 @@ publish/
 #password filled web.config
 Web-azure.config
 Web-local-development.config
-prepare4*.config
+prepare4*.bat
 
 # Microsoft Azure Build Output
 csx/
