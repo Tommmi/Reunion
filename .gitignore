@@ -159,9 +159,9 @@ publish/
 *.nuget.targets
 
 #password filled web.config
-#Web-azure.config
-#Web-local-development.config
-#prepare4*.config
+Web-azure.config
+Web-local-development.config
+prepare4*.config
 
 # Microsoft Azure Build Output
 csx/
