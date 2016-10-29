@@ -204,7 +204,11 @@ namespace Reunion.Common
 		/// - Player
 		/// - Reunion
 		/// </param>
-		void UpdateState(StatemachineContext newState);
+		/// <param name="oldState">
+		/// old state
+		/// Precondition: current state must be equal old state, otherwise methof won't execute and will return false.
+		/// </param>
+		bool UpdateState(StatemachineContext newState, int oldState);
 
 		///  <summary>
 		///  Replaces time ranges of participant

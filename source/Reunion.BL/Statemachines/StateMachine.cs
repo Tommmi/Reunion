@@ -135,8 +135,9 @@ namespace Reunion.BL.Statemachines
 		/// <param name="signal"></param>
 		public void Trigger(Signal signal)
 		{
+			var oldState = StateMachineEntity.CurrentState;
 			CurrentState.OnSignal(signal);
-			_dal.UpdateState(StateMachineEntity);
+			_dal.UpdateState(StateMachineEntity, oldState);
 		}
 
 		#region IStateMachine
@@ -154,8 +155,9 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public void Touch()
 		{
+			var oldState = StateMachineEntity.CurrentState;
 			CurrentState.Touch();
-			_dal.UpdateState(StateMachineEntity);
+			_dal.UpdateState(StateMachineEntity, oldState);
 		}
 
 		#endregion

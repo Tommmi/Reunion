@@ -1,3 +1,6 @@
+# version 1.0.0.5 29.10.2016
+- bug fix: reunion may not change states on "dirty update" conflict
+- minimum time to escalate non-responding of a participant set to 2 days
 # version 1.0.0.4 28.10.2016
 - bugfix: sending mail on a MAC
 - status view: smiley added, layout corrected, Resend button not always visible

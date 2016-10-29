@@ -37,7 +37,6 @@ namespace Reunion.Web
 			IDIContainer container = new ExtendedUnityContainer(unityContainer);
 
 
-			var mailAddressOfReunion = new MailAddress("findtime@gmx.de", displayName: "Reunion Webservice");
 
 			container.RegisterPerRequest<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(
 						c => new UserStore<ApplicationUser>(c.Get<ApplicationDbContext>()));
@@ -51,6 +50,7 @@ namespace Reunion.Web
 			container.RegisterSingleton<IEmailSender, SmptEmailSender>(c =>
 			{
 				var appSettings = c.Get<IAppSettings>();
+				var mailAddressOfReunion = new MailAddress(appSettings.MailAccount_MailAddress, displayName: "Reunion Webservice");
 				return new SmptEmailSender(
 					logger: c.Get<ITLog>(),
 					fromAddress: mailAddressOfReunion,
@@ -81,15 +81,19 @@ namespace Reunion.Web
 			container.RegisterSingleton<IReunionDal, ReunionDal>();
 			container.RegisterSingleton<ILazy<IReunionBL>, TUtils.Common.DependencyInjection.Lazy<IReunionBL>>(di => new TUtils.Common.DependencyInjection.Lazy<IReunionBL>(di));
 			container.Register<IReunionStatemachineBL, ReunionBL>(diContainer => (ReunionBL)diContainer.Get<IReunionBL>());
-			container.RegisterPerRequest<IReunionBL, ReunionBL>(diContainer => new ReunionBL(
-				diContainer.Get<ITransactionService<ReunionDbContext>>(),
-				diContainer.Get<IReunionDal>(),
-				diContainer.Get<IEmailSender>(),
-				diContainer.Get<IBlResource>(),
-				minimumWaitTimeSeconds: 3 * 60, // 2*24*3600,
-				startPage4Participant: diContainer.Get<IAppSettings>().StartPage4Participant,
-				statusPageOfReunion: diContainer.Get<IAppSettings>().StatusPageOfReunion,
-				mailAddressOfReunion: mailAddressOfReunion.Address));
+			container.RegisterPerRequest<IReunionBL, ReunionBL>(diContainer =>
+			{
+				var appSettings = diContainer.Get<IAppSettings>();
+				return new ReunionBL(
+					diContainer.Get<ITransactionService<ReunionDbContext>>(),
+					diContainer.Get<IReunionDal>(),
+					diContainer.Get<IEmailSender>(),
+					diContainer.Get<IBlResource>(),
+					minimumWaitTimeSeconds: 2*24*3600,
+					startPage4Participant: diContainer.Get<IAppSettings>().StartPage4Participant,
+					statusPageOfReunion: diContainer.Get<IAppSettings>().StatusPageOfReunion,
+					mailAddressOfReunion: appSettings.MailAccount_MailAddress);
+			});
 
 			container.RegisterSingleton<ILanguagesService, LanguagesService>();
 

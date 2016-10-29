@@ -88,6 +88,9 @@ ipch/
 *.vspx
 *.sap
 
+# don't put WebJob in github
+Reunion.WebJob.TriggerTouch/
+
 # TFS 2012 Local Workspace
 $tf/
 

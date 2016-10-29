@@ -563,12 +563,12 @@ namespace Reunion.DAL
 			});
 		}
 
-		void IReunionDal.UpdateState(StatemachineContext newState)
+		bool IReunionDal.UpdateState(StatemachineContext newState, int oldState)
 		{
 			if (!newState.IsDirty)
-				return;
+				return true;
 
-			_transactionService.DoInTransaction(db =>
+			return _transactionService.DoInTransaction(db =>
 			{
 				var stateContextEntity =
 					db.StateMachines.FirstOrDefault(
@@ -576,10 +576,14 @@ namespace Reunion.DAL
 				if (stateContextEntity == null)
 					throw new ApplicationException("ehflkwke89324lah " + newState.StatemachineTypeId);
 
+				if ( stateContextEntity.CurrentState != oldState)
+					return false;
+
 				EntityExtension.ApplyChanges(newState, stateContextEntity);
 
 				db.SaveChanges();
 				newState.IsDirty = false;
+				return true;
 			});
 		}
 
