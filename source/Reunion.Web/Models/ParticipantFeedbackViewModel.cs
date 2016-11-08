@@ -24,7 +24,8 @@ namespace Reunion.Web.Models
 			IEnumerable<TimeRange> preferredDates,
 			IEnumerable<TimeRange> timeRangesOfOrganizer,
 			DateTime? finalInvitationDate,
-			bool? hasAcceptedFinalInvitationdate)
+			bool? hasAcceptedFinalInvitationdate,
+			IEnumerable<DateTime> daysToBeChecked)
 		{
 			TimeRangesOfOrganizer = timeRangesOfOrganizer;
 			FinalInvitationDate = finalInvitationDate;
@@ -40,6 +41,19 @@ namespace Reunion.Web.Models
 			UnsetMonths = GetMonths(timeRangesOfOrganizer)
 				.Where(d=>!setMonths.Contains(d))
 				.ToList();
+			if (daysToBeChecked != null)
+			{
+				UnsetDaysFormattedText = null;
+				foreach (var day in daysToBeChecked)
+				{
+					if (UnsetDaysFormattedText == null)
+						UnsetDaysFormattedText = string.Empty;
+					else
+						UnsetDaysFormattedText += ", ";
+
+					UnsetDaysFormattedText += day.ToString("d", Culture);
+				}
+			}
 		}
 
 		private static List<DateTime> GetMonths(IEnumerable<TimeRange> preferredDates)
@@ -73,6 +87,12 @@ namespace Reunion.Web.Models
 		public DateTime? FinalInvitationDate { get; private set; }
 
 		public bool? HasAcceptedFinalInvitationdate { get; set; }
+
+		/// <summary>
+		/// which days should participant check ?
+		/// May be null.
+		/// </summary>
+		public string UnsetDaysFormattedText { get; set; }
 
 		public string GetLocalizedText(string ressourceKey, params object[] args)
 		{

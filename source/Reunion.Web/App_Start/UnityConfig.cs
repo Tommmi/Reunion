@@ -81,15 +81,19 @@ namespace Reunion.Web
 			container.RegisterSingleton<IReunionDal, ReunionDal>();
 			container.RegisterSingleton<ILazy<IReunionBL>, TUtils.Common.DependencyInjection.Lazy<IReunionBL>>(di => new TUtils.Common.DependencyInjection.Lazy<IReunionBL>(di));
 			container.Register<IReunionStatemachineBL, ReunionBL>(diContainer => (ReunionBL)diContainer.Get<IReunionBL>());
-			container.RegisterPerRequest<IReunionBL, ReunionBL>(diContainer => new ReunionBL(
-				diContainer.Get<ITransactionService<ReunionDbContext>>(),
-				diContainer.Get<IReunionDal>(),
-				diContainer.Get<IEmailSender>(),
-				diContainer.Get<IBlResource>(),
-				minimumWaitTimeSeconds: 3 * 60, // 2*24*3600,
-				startPage4Participant: diContainer.Get<IAppSettings>().StartPage4Participant,
-				statusPageOfReunion: diContainer.Get<IAppSettings>().StatusPageOfReunion,
-				mailAddressOfReunion: mailAddressOfReunion.Address));
+			container.RegisterPerRequest<IReunionBL, ReunionBL>(diContainer =>
+			{
+				var appSettings = diContainer.Get<IAppSettings>();
+				return new ReunionBL(
+					diContainer.Get<ITransactionService<ReunionDbContext>>(),
+					diContainer.Get<IReunionDal>(),
+					diContainer.Get<IEmailSender>(),
+					diContainer.Get<IBlResource>(),
+					minimumWaitTimeSeconds: appSettings.MaxReactionTimeHours * 3600,
+					startPage4Participant: appSettings.StartPage4Participant,
+					statusPageOfReunion: appSettings.StatusPageOfReunion,
+					mailAddressOfReunion: mailAddressOfReunion.Address);
+			});
 
 			container.RegisterSingleton<ILanguagesService, LanguagesService>();
 

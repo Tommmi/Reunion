@@ -194,7 +194,7 @@ namespace Reunion.DAL
 		/// </param>
 		private static void RemovePlayer(ReunionDbContext db, Player player)
 		{
-			var statemachines = db.StateMachines.Where(s => s.Player.Id == player.Id).ToList();
+			var statemachines = db.StateMachines.Where(s => s.PlayerId == player.Id).ToList();
 			db.StateMachines.RemoveRange(statemachines);
 
 			var timeRanges = db.TimeRanges.Where(r => r.Player.Id == player.Id).ToList();
@@ -436,7 +436,7 @@ namespace Reunion.DAL
 					join ks in db.KnockStatemachines
 						on r.Id equals ks.ReunionId
 					join ps in db.ParticipantStatemachines
-						on p.Id equals ps.Player.Id
+						on p.Id equals ps.PlayerId
 					where r.Id == reunionId
 					group new {Participant=p,ParticipantStatemachine=ps} 
 						by new { Reunion = r, Organizer = o, OrganizerStatemachine = os, KnockoutStatemachine = ks }
@@ -463,11 +463,11 @@ namespace Reunion.DAL
 						var player = reunionInfo.Participants[i];
 						var statemachine = reunionInfo.ParticipantStatemachines[i];
 						player.Reunion = reunion;
-						statemachine.Player = player;
+						statemachine.PlayerId = player.Id;
 						statemachine.Reunion = reunion;
 					}
 					reunionInfo.KnockStatemachineEntity.Reunion = reunion;
-					reunionInfo.KnockStatemachineEntity.Player = reunionInfo.Organizer;
+					reunionInfo.KnockStatemachineEntity.PlayerId = reunionInfo.Organizer.Id;
 				}
 				return reunionInfo;
 			});

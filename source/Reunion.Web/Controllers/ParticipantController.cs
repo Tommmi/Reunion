@@ -66,11 +66,13 @@ namespace Reunion.Web.Controllers
 
 			DateTime? finalInvitationdate;
 			bool? hasAcceptedFinalInvitationdate;
+			IEnumerable<DateTime> daysToBeChecked;
 			var preferredDates = _bl.GetTimeRangesOfParticipant(
 				reunionId: participant.Reunion.Id,
 				participantId:participant.Id,
 				finalInvitationdate: out finalInvitationdate,
-				hasAcceptedFinalInvitationdate: out hasAcceptedFinalInvitationdate);
+				hasAcceptedFinalInvitationdate: out hasAcceptedFinalInvitationdate,
+				daysToBeChecked: out daysToBeChecked);
 			ViewBag.ShowLanguageSwitch = false;
 			ViewBag.LanguageIsoCode = participant.LanguageIsoCodeOfPlayer;
 			return View("ShowMyCalendar", new ParticipantFeedbackViewModel(
@@ -78,7 +80,8 @@ namespace Reunion.Web.Controllers
 				preferredDates: preferredDates,
 				timeRangesOfOrganizer: _bl.GetTimeRangesOfReunion(participant.Reunion.Id),
 				finalInvitationDate:finalInvitationdate,
-				hasAcceptedFinalInvitationdate:hasAcceptedFinalInvitationdate));
+				hasAcceptedFinalInvitationdate:hasAcceptedFinalInvitationdate,
+				daysToBeChecked: daysToBeChecked));
 		}
 
 		[HttpPost]

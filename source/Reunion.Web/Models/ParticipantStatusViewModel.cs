@@ -62,11 +62,13 @@ namespace Reunion.Web.Models
 					case ParticipantStatusEnum.ReactionOnInvitationMissing:
 					case ParticipantStatusEnum.ReactionOnFinalInvitationMissing:
 					case ParticipantStatusEnum.RejectedInvitation:
+					case ParticipantStatusEnum.ReactionOnFeedbackMissing:
 						return true;
 					case ParticipantStatusEnum.WaitOnLoginForInvitation:
 					case ParticipantStatusEnum.Invitated:
 					case ParticipantStatusEnum.FinallyInvitated:
 					case ParticipantStatusEnum.Accepted:
+					case ParticipantStatusEnum.MissingInformation:
 						return false;
 					default:
 						throw new ArgumentOutOfRangeException("hsahdfd723jkafv " + CurrentState);
@@ -96,6 +98,10 @@ namespace Reunion.Web.Models
 						return Resource1.RejectedFinallyInvitation;
 					case ParticipantStatusEnum.Accepted:
 						return Resource1.Accepted;
+					case ParticipantStatusEnum.MissingInformation:
+						return Resource1.Answered;
+					case ParticipantStatusEnum.ReactionOnFeedbackMissing:
+						return Resource1.ReactionOnFeedbackMissing;
 					default:
 						throw new ArgumentOutOfRangeException("hsahdfd723jkafv " + CurrentState);
 				}

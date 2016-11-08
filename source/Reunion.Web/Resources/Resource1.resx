@@ -720,4 +720,38 @@ meeting directly. A registration on this web portal isn't necessary.</value>
   <data name="NotYet" xml:space="preserve">
     <value>Not yet</value>
   </data>
+  <data name="MissingDayNotificationMailSubject" xml:space="preserve">
+    <value>{0} - missing some information</value>
+  </data>
+  <data name="MissingDayNotificationBody" xml:space="preserve">
+    <value>Hello participant,
+
+Unfortunately we couldn't find a common date.
+The most promising dates so far are:
+
+{1}
+
+Unfortunately you didn't give any details on these days.
+
+The calendar with your details can be reached via the following link:
+
+&lt;a href="{2}"&gt; Reunion &lt;/a&gt;
+
+---------------------------------------------------------------------------
+This email was generated automatically by &lt;b&gt; Reunion &lt;/ b&gt;.
+---------------------------------------------------------------------------
+
+
+</value>
+  </data>
+  <data name="ReactionOnFeedbackMissing" xml:space="preserve">
+    <value>didn't filled in important days</value>
+  </data>
+  <data name="ActionRequired" xml:space="preserve">
+    <value>Your action is required</value>
+  </data>
+  <data name="CheckDays" xml:space="preserve">
+    <value>We couldn't find a date for the event, yet.
+Please check and update the following days: {0}</value>
+  </data>
 </root>

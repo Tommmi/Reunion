@@ -714,4 +714,38 @@ ist nicht erforderlich.</value>
   <data name="NotYet" xml:space="preserve">
     <value>Noch nicht</value>
   </data>
+  <data name="MissingDayNotificationMailSubject" xml:space="preserve">
+    <value>{0} - es fehlen noch einige Informationen</value>
+  </data>
+  <data name="MissingDayNotificationBody" xml:space="preserve">
+    <value>Hallo Teilnehmer,
+
+leider konnte noch kein gemeinsamer Termin gefunden werden. 
+Die vielversprechendsten Termine sind bisher: 
+
+{1}
+
+Leider hast Du zu diesen Tagen noch gar keine Angaben gemacht.
+
+Den Kalender mit Deinen Angaben erreichst Du über folgenden Link:
+
+&lt;a href="{2}"&gt;Reunion&lt;/a&gt;
+
+--------------------------------------------------------------------
+Diese Email wurde automatisch durch &lt;b&gt;Reunion&lt;/b&gt; erstellt.
+--------------------------------------------------------------------
+
+
+</value>
+  </data>
+  <data name="ReactionOnFeedbackMissing" xml:space="preserve">
+    <value>Kalendareintragungen unvollständig</value>
+  </data>
+  <data name="ActionRequired" xml:space="preserve">
+    <value>Bitte beachten</value>
+  </data>
+  <data name="CheckDays" xml:space="preserve">
+    <value>Es konnte noch kein gemeinsammer Termin gefunden werden.
+Bitte folgende Tage prüfen und nachtragen: {0}</value>
+  </data>
 </root>

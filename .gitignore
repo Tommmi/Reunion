@@ -163,6 +163,9 @@ Web-azure.config
 Web-local-development.config
 prepare4*.bat
 
+#WebJob
+Reunion.WebJob.TriggerTouch/
+
 # Microsoft Azure Build Output
 csx/
 *.build.csdef

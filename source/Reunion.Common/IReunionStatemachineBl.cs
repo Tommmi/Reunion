@@ -1,4 +1,7 @@
-﻿namespace Reunion.Common
+﻿using System;
+using System.Collections.Generic;
+
+namespace Reunion.Common
 {
 	/// <summary>
 	/// business layer service for statemachines
@@ -69,5 +72,8 @@
 		/// </summary>
 		/// <param name="reunionId"></param>
 		void WakeOrganizer(int reunionId);
+
+		bool MissingDaysOfParticipant(int reunionId, int participantId);
+		void SendMissingDaysNotification(int reunionId, int participantId);
 	}
 }
