@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Reunion.Common;
 using Reunion.Common.Model;
 using Reunion.Common.Model.States;
+using TUtils.Common.Extensions;
 
 namespace Reunion.BL.Statemachines
 {
@@ -131,10 +132,23 @@ namespace Reunion.BL.Statemachines
 			protected override void OnEntered(State<ParticipantStatemachine, ParticipantStatemachineEntity> oldState)
 			{
 				base.OnEntered(oldState);
-				if (oldState != Statemachine.StateReactionOnInvitationMissing
-					&& oldState != Statemachine.StateWaitOnLoginForInvitation)
+				switch ((ParticipantStatusEnum)oldState.CurrentState)
 				{
-					Bl.SendRejectionMailToParticipant(reunionId:ReunionId,participantId:ParticipantId);
+					case ParticipantStatusEnum.ReactionOnInvitationMissing:
+					case ParticipantStatusEnum.WaitOnLoginForInvitation:
+					case ParticipantStatusEnum.MissingInformation:
+					case ParticipantStatusEnum.ReactionOnFeedbackMissing:
+						break;
+					case ParticipantStatusEnum.Created:
+					case ParticipantStatusEnum.Invitated:
+					case ParticipantStatusEnum.FinallyInvitated:
+					case ParticipantStatusEnum.ReactionOnFinalInvitationMissing:
+					case ParticipantStatusEnum.RejectedInvitation:
+					case ParticipantStatusEnum.Accepted:
+						Bl.SendRejectionMailToParticipant(reunionId: ReunionId, participantId: ParticipantId);
+						break;
+					default:
+						throw new ApplicationException("651re1qzdq73:" + oldState.CurrentState);
 				}
 			}
 
@@ -143,6 +157,18 @@ namespace Reunion.BL.Statemachines
 				base.OnSignal(signal);
 				if (signal is SignalFinalInvitation)
 					SetNewState(Statemachine.StateFinallyInvitated);
+				else if (signal is SignalInformationMissing)
+					SetNewState(Statemachine.StateMissingInformation);
+			}
+
+			public override void Touch()
+			{
+				base.Touch();
+				if (Statemachine.CurrentState == this)
+				{
+					if (Bl.MissingDaysOfParticipant(ReunionId, ParticipantId))
+						Statemachine.Trigger(new SignalInformationMissing());
+				}
 			}
 		}
 
@@ -157,7 +183,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class FinallyInvitated : BaseState
 		{
-			public FinallyInvitated() : base((int)ParticipantStatusEnum.FinallyInvitated, isTerminated: false)
+			public FinallyInvitated() : base((int) ParticipantStatusEnum.FinallyInvitated, isTerminated: false)
 			{
 			}
 
@@ -176,7 +202,7 @@ namespace Reunion.BL.Statemachines
 					SetNewState(Statemachine.StateAccepted);
 				else if (signal is SignalTimeElapsed)
 					SetNewState(Statemachine.StateReactionOnFinalInvitationMissing);
-				else if ( signal is SignalFinalInvitationCanceledByOrganizer)
+				else if (signal is SignalFinalInvitationCanceledByOrganizer)
 					SetNewState(Statemachine.StateInvitated);
 				else if (signal is SignalDateRangesUpdated)
 					Bl.CheckFinalDateRejected(ReunionId, ParticipantId);
@@ -194,7 +220,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class ReactionOnFinalInvitationMissing : BaseState
 		{
-			public ReactionOnFinalInvitationMissing() : base((int)ParticipantStatusEnum.ReactionOnFinalInvitationMissing, isTerminated: false)
+			public ReactionOnFinalInvitationMissing() : base((int) ParticipantStatusEnum.ReactionOnFinalInvitationMissing, isTerminated: false)
 			{
 			}
 
@@ -217,6 +243,7 @@ namespace Reunion.BL.Statemachines
 				Bl.WakeOrganizer(ReunionId);
 			}
 		}
+
 		/// <summary>
 		/// state ReactionOnFinalInvitationMissing: participant has got a final invitation mail, 
 		/// but hasn't reacted on that mail for a long time.
@@ -228,7 +255,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class RejectedInvitation : BaseState
 		{
-			public RejectedInvitation() : base((int)ParticipantStatusEnum.RejectedInvitation, isTerminated: false)
+			public RejectedInvitation() : base((int) ParticipantStatusEnum.RejectedInvitation, isTerminated: false)
 			{
 			}
 
@@ -254,7 +281,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class Accepted : BaseState
 		{
-			public Accepted() : base((int)ParticipantStatusEnum.Accepted, isTerminated: true)
+			public Accepted() : base((int) ParticipantStatusEnum.Accepted, isTerminated: true)
 			{
 			}
 
@@ -275,6 +302,90 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public Accepted StateAccepted { get; private set; } = new Accepted();
 
+		/// <summary>
+		/// state MissingInformation: The participant has so far not given any information on the most possible days.
+		/// </summary>
+		public class MissingInformation : BaseState
+		{
+			public MissingInformation() : base((int) ParticipantStatusEnum.MissingInformation, isTerminated: false)
+			{
+			}
+
+			protected override void OnEntered(State<ParticipantStatemachine, ParticipantStatemachineEntity> oldState)
+			{
+				base.OnEntered(oldState);
+				Bl.SendMissingDaysNotification(ReunionId, ParticipantId);
+				Statemachine.StateMachineEntity.ElapseDate = DateTime.Now.AddSeconds(Statemachine.MinimumWaitTimeSeconds);
+			}
+
+			public override void OnSignal(Signal signal)
+			{
+				base.OnSignal(signal);
+				if (signal is SignalFinalInvitation)
+					SetNewState(Statemachine.StateFinallyInvitated);
+				else if (signal is SignalNoInformationMissing)
+					SetNewState(Statemachine.StateInvitated);
+				else if (signal is SignalTimeElapsed)
+					SetNewState(Statemachine.StateReactionOnFeedbackMissing);
+			}
+
+			public override void Touch()
+			{
+				base.Touch();
+				if (Statemachine.CurrentState == this)
+				{
+					if (!Bl.MissingDaysOfParticipant(ReunionId, ParticipantId))
+						Statemachine.Trigger(new SignalNoInformationMissing());
+				}
+			}
+		}
+
+		/// <summary>
+		/// state MissingInformation: The participant has so far not given any information on the most possible days.
+		/// </summary>
+		public MissingInformation StateMissingInformation { get; private set; } = new MissingInformation();
+
+		/// <summary>
+		/// state ReactionOnFeedbackMissing: The participant has so far not given any information on the most possible days
+		/// for a long time.
+		/// </summary>
+		public class ReactionOnFeedbackMissing : BaseState
+		{
+			public ReactionOnFeedbackMissing() : base((int) ParticipantStatusEnum.ReactionOnFeedbackMissing, isTerminated: false)
+			{
+			}
+
+			protected override void OnEntered(State<ParticipantStatemachine, ParticipantStatemachineEntity> oldState)
+			{
+				base.OnEntered(oldState);
+				Bl.WakeOrganizer(ReunionId);
+			}
+
+			public override void OnSignal(Signal signal)
+			{
+				base.OnSignal(signal);
+				if (signal is SignalFinalInvitation)
+					SetNewState(Statemachine.StateFinallyInvitated);
+				else if (signal is SignalNoInformationMissing)
+					SetNewState(Statemachine.StateInvitated);
+			}
+
+			public override void Touch()
+			{
+				base.Touch();
+				if (Statemachine.CurrentState == this)
+				{
+					if (!Bl.MissingDaysOfParticipant(ReunionId, ParticipantId))
+						Statemachine.Trigger(new SignalNoInformationMissing());
+				}
+			}
+		}
+
+		/// <summary>
+		/// state ReactionOnFeedbackMissing: The participant has so far not given any information on the most possible days
+		/// for a long time.
+		/// </summary>
+		public ReactionOnFeedbackMissing StateReactionOnFeedbackMissing { get; private set; } = new ReactionOnFeedbackMissing();
 
 		#endregion
 
@@ -290,12 +401,7 @@ namespace Reunion.BL.Statemachines
 		/// </param>
 		/// <param name="dal"></param>
 		/// <param name="bl"></param>
-		public ParticipantStatemachine(
-			ParticipantStatemachineEntity statemachineEntity,
-			int minimumWaitTimeSeconds,
-			IReunionDal dal,
-			IReunionStatemachineBL bl)
-			: base(statemachineEntity, dal, bl)
+		public ParticipantStatemachine(ParticipantStatemachineEntity statemachineEntity, int minimumWaitTimeSeconds, IReunionDal dal, IReunionStatemachineBL bl) : base(statemachineEntity, dal, bl)
 		{
 			MinimumWaitTimeSeconds = minimumWaitTimeSeconds;
 			Init();
@@ -305,14 +411,7 @@ namespace Reunion.BL.Statemachines
 		{
 			return new State[]
 			{
-				StateCreated,
-				StateFinallyInvitated,
-				StateInvitated,
-				StateReactionOnFinalInvitationMissing,
-				StateWaitOnLoginForInvitation,
-				StateReactionOnInvitationMissing,
-				StateAccepted,
-				StateRejectedInvitation
+				StateCreated, StateFinallyInvitated, StateInvitated, StateReactionOnFinalInvitationMissing, StateWaitOnLoginForInvitation, StateReactionOnInvitationMissing, StateAccepted, StateRejectedInvitation, StateMissingInformation, StateReactionOnFeedbackMissing,
 			};
 		}
 
@@ -376,13 +475,26 @@ namespace Reunion.BL.Statemachines
 		{
 		}
 
+		/// <summary>
+		/// sent when the participant has so far not given any information on the most possible days.
+		/// </summary>
+		public class SignalInformationMissing : Signal
+		{
+		}
+
+		/// <summary>
+		/// sent when the participant has given all information on the very most possible days.
+		/// </summary>
+		public class SignalNoInformationMissing : Signal
+		{
+		}
 
 		#endregion
 
 		#region public
 
 		public readonly int MinimumWaitTimeSeconds;
-		public int ParticipantId => StateMachineEntity.Player.Id;
+		public int ParticipantId => StateMachineEntity.PlayerId;
 
 		#endregion
 	}

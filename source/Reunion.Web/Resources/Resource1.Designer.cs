@@ -547,6 +547,15 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your action is required.
+        /// </summary>
+        public static string ActionRequired {
+            get {
+                return ResourceManager.GetString("ActionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add this participant.
         /// </summary>
         public static string AddThisParticipant {
@@ -570,6 +579,16 @@ namespace Reunion.Web.Resources {
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We couldn&apos;t find a date for the event, yet.
+        ///Please check and update the following days: {0}.
+        /// </summary>
+        public static string CheckDays {
+            get {
+                return ResourceManager.GetString("CheckDays", resourceCulture);
             }
         }
         
@@ -1253,6 +1272,42 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hello participant,
+        ///
+        ///Unfortunately we couldn&apos;t find a common date.
+        ///The most promising dates so far are:
+        ///
+        ///{1}
+        ///
+        ///Unfortunately you didn&apos;t give any details on these days.
+        ///
+        ///The calendar with your details can be reached via the following link:
+        ///
+        ///&lt;a href=&quot;{2}&quot;&gt; Reunion &lt;/a&gt;
+        ///
+        ///---------------------------------------------------------------------------
+        ///This email was generated automatically by &lt;b&gt; Reunion &lt;/ b&gt;.
+        ///---------------------------------------------------------------------------
+        ///
+        ///
+        ///.
+        /// </summary>
+        public static string MissingDayNotificationBody {
+            get {
+                return ResourceManager.GetString("MissingDayNotificationBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - missing some information.
+        /// </summary>
+        public static string MissingDayNotificationMailSubject {
+            get {
+                return ResourceManager.GetString("MissingDayNotificationMailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to For the following months there is still missing your statement: {0}.
         /// </summary>
         public static string MonthsMissing {
@@ -1402,6 +1457,15 @@ namespace Reunion.Web.Resources {
         public static string QuestionFinalInvitation {
             get {
                 return ResourceManager.GetString("QuestionFinalInvitation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to didn&apos;t filled in important days.
+        /// </summary>
+        public static string ReactionOnFeedbackMissing {
+            get {
+                return ResourceManager.GetString("ReactionOnFeedbackMissing", resourceCulture);
             }
         }
         

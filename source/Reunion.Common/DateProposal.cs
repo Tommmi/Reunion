@@ -25,7 +25,14 @@ namespace Reunion.Common
 		/// all participant ids of those who won't come
 		/// </summary>
 		public IList<int> RefusingParticipantIds { get; private set; } = new List<int>();
-
+		/// <summary>
+		/// all participant ids of those who don't know it yet
+		/// </summary>
+		public IList<int> MayBeParticipantIds { get; private set; } = new List<int>();
+		/// <summary>
+		/// all participants who didn't give an information for that day
+		/// </summary>
+		public IList<int> DontKnowParticipantIds { get; set; } = new List<int>();
 		/// <summary>
 		/// comma seperated list of all participants, who accept this date
 		/// </summary>

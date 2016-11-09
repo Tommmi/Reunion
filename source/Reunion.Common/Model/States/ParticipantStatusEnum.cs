@@ -34,5 +34,14 @@
 		/// participant accepted the final invitation
 		/// </summary>
 		Accepted = 8,
+		/// <summary>
+		/// The participant has so far not given any information on the most possible days.
+		/// </summary>
+		MissingInformation = 9,
+		/// <summary>
+		/// participant has been informed about a missing date information but didn't react on that 
+		/// notification yet.
+		/// </summary>
+		ReactionOnFeedbackMissing = 10,
 	}
 }

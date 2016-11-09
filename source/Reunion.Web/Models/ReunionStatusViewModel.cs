@@ -50,7 +50,8 @@ namespace Reunion.Web.Models
 				return _participants.Any(p =>
 					p.Item1.IsRequired
 					&& (p.Item2 == ParticipantStatusEnum.ReactionOnFinalInvitationMissing
-					    || p.Item2 == ParticipantStatusEnum.ReactionOnInvitationMissing));
+					    || p.Item2 == ParticipantStatusEnum.ReactionOnInvitationMissing
+						|| p.Item2 == ParticipantStatusEnum.ReactionOnFeedbackMissing));
 			}
 		}
 
@@ -60,7 +61,8 @@ namespace Reunion.Web.Models
 			{
 				return _participants.Any(p =>
 					p.Item2 == ParticipantStatusEnum.ReactionOnFinalInvitationMissing
-					|| p.Item2 == ParticipantStatusEnum.ReactionOnInvitationMissing);
+					|| p.Item2 == ParticipantStatusEnum.ReactionOnInvitationMissing
+					|| p.Item2 == ParticipantStatusEnum.ReactionOnFeedbackMissing);
 			}
 		}
 

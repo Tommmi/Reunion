@@ -32,12 +32,18 @@ namespace Reunion.Common
 		/// OUT: false, if participant has rejected a given final invitation
 		/// OUT: null, if participant hasn't accepted nor rejected a given final invitation
 		/// </param>
+		/// <param name="daysToBeChecked">
+		/// days, which has to be checked by participant. 
+		/// Normally these days are the most possible dates for the event.
+		/// May be null.
+		/// </param>
 		/// <returns></returns>
 		IEnumerable<TimeRange> GetTimeRangesOfParticipant(
 			int reunionId, 
 			int participantId, 
 			out DateTime? finalInvitationdate, 
-			out bool? hasAcceptedFinalInvitationdate);
+			out bool? hasAcceptedFinalInvitationdate,
+			out IEnumerable<DateTime> daysToBeChecked);
 
 		/// <summary>
 		/// Gets participant by unguessable id of the participant.

@@ -89,10 +89,10 @@ namespace Reunion.Web
 					diContainer.Get<IReunionDal>(),
 					diContainer.Get<IEmailSender>(),
 					diContainer.Get<IBlResource>(),
-					minimumWaitTimeSeconds: 2*24*3600,
-					startPage4Participant: diContainer.Get<IAppSettings>().StartPage4Participant,
-					statusPageOfReunion: diContainer.Get<IAppSettings>().StatusPageOfReunion,
-					mailAddressOfReunion: appSettings.MailAccount_MailAddress);
+					minimumWaitTimeSeconds: appSettings.MaxReactionTimeHours * 3600,
+					startPage4Participant: appSettings.StartPage4Participant,
+					statusPageOfReunion: appSettings.StatusPageOfReunion,
+					mailAddressOfReunion: mailAddressOfReunion.Address);
 			});
 
 			container.RegisterSingleton<ILanguagesService, LanguagesService>();

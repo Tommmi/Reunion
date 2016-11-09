@@ -101,5 +101,31 @@ namespace Reunion.Web.Common
 		{
 			return Resource1.ResourceManager.GetString(nameof(Resource1.RejectionMailBodyParticipant), cultureInfo);
 		}
+
+		/// <summary>
+		/// subject of mail which informs participant about that he hasn't filled in some important days 
+		/// in the calendar.
+		/// {0}:reunion name
+		/// </summary>
+		/// <param name="cultureInfo"></param>
+		/// <returns></returns>
+		string IBlResource.GetMissingDayNotificationMailSubject(CultureInfo cultureInfo)
+		{
+			return Resource1.ResourceManager.GetString(nameof(Resource1.MissingDayNotificationMailSubject), cultureInfo);
+		}
+
+		/// <summary>
+		/// body of mail which informs participant about that he hasn't filled in some important days 
+		/// in the calendar.
+		/// {0}:reunion name
+		/// {1}:missing days: e.g.: "01.10.2016, 02.10.2016"
+		/// {2}:direct link
+		/// </summary>
+		/// <param name="cultureInfo"></param>
+		/// <returns></returns>
+		string IBlResource.GetMissingDayNotificationBody(CultureInfo cultureInfo)
+		{
+			return Resource1.ResourceManager.GetString(nameof(Resource1.MissingDayNotificationBody), cultureInfo);
+		}
 	}
 }

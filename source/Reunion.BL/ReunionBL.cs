@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Reunion.BL
 				ParticipantStatemachines = new Dictionary<int, ParticipantStatemachine>();
 				foreach (var statemachine in participantStatemachines)
 				{
-					ParticipantStatemachines[statemachine.StateMachineEntity.Player.Id] = statemachine;
+					ParticipantStatemachines[statemachine.StateMachineEntity.PlayerId] = statemachine;
 				}
 			}
 
@@ -55,6 +56,15 @@ namespace Reunion.BL
 			/// Will be filled only by ReunionBL.GetDateProposals()
 			/// </summary>
 			public IEnumerable<DateProposal> CachedDateProposals { get; set; }
+
+			/// <summary>
+			/// may be null !
+			/// Will be filled only by ReunionBl.GetMissingDayInformations()
+			/// Map: particpant id -> most possible days, for which participant didn't made a preference.
+			/// If a participant has marked all days in the calendar he won't be in this map.
+			/// </summary>
+			public Dictionary<int,IList<DateTime>> MissingDayInformations { get; set; }
+
 			public ReunionEntity Reunion { get; }
 			public Organizer Organizer { get; }
 			public IEnumerable<Participant> Participants { get; }
@@ -170,10 +180,11 @@ namespace Reunion.BL
 		private static IDictionary<DateTime, DateProposal> CreateNewDateProposals(ReunionContext reunionContext)
 		{
 			IEnumerable<TimeRange> organizersTimeRanges = reunionContext.PossibleDatesOfOrganizer;
+			var participantIds = reunionContext.Participants.Select(p => p.Id).ToList();
 			return organizersTimeRanges
 				.Where(tr => tr.Preference != PreferenceEnum.NoWay && tr.Preference != PreferenceEnum.None)
 				.SelectMany(GetDatesOfTimeRange)
-				.ToDictionary(date => date, date => new DateProposal(date));
+				.ToDictionary(date => date, date => new DateProposal(date) {DontKnowParticipantIds = participantIds.ToList()});
 		}
 
 		private static CultureInfo GetCulture(string isoCode)
@@ -204,6 +215,37 @@ namespace Reunion.BL
 			return dates;
 		}
 
+		private Dictionary<int, IList<DateTime>> GetMissingDayInformations(int reunionId)
+		{
+			var reunionContext = LoadReunion(reunionId: reunionId, organizerId: null, forceReload: false);
+			if (reunionContext == null)
+				return null;
+			if (reunionContext.MissingDayInformations != null)
+				return reunionContext.MissingDayInformations;
+
+			var missingDayInformations = new Dictionary<int, IList<DateTime>>();
+			reunionContext.MissingDayInformations = missingDayInformations;
+			var dateProposals = ((IReunionBL) this).GetDateProposals(reunionId, organizerId: null);
+			if (dateProposals == null)
+				return null;
+			var mostPossibleDates = dateProposals.Take(3).ToList();
+			foreach (var possibleDate in mostPossibleDates)
+			{
+				foreach (var participantId in possibleDate.DontKnowParticipantIds)
+				{
+					IList<DateTime> dates;
+					if (!missingDayInformations.TryGetValue(participantId, out dates))
+					{
+						dates = new List<DateTime>();
+						missingDayInformations[participantId] = dates;
+					}
+					dates.Add(possibleDate.Date);
+				}
+			}
+
+			return missingDayInformations;
+		}
+
 		private static List<Participant> GetParticipantsToInvite(ReunionContext reunionContext)
 		{
 			return reunionContext.Participants.Where(p =>
@@ -217,7 +259,7 @@ namespace Reunion.BL
 		{
 			return reunionContext.ParticipantStatemachines.Values
 				.Where(s => s.StateMachineEntity.CurrentState == ParticipantStatusEnum.RejectedInvitation)
-				.Select(s => s.StateMachineEntity.Player.Id)
+				.Select(s => s.StateMachineEntity.PlayerId)
 				.ToList();
 		}
 
@@ -335,6 +377,7 @@ namespace Reunion.BL
 			bool isRequiredParticipant)
 		{
 			dateProposal.AcceptingParticipantIds.Add(participantId);
+			dateProposal.DontKnowParticipantIds.Remove(participantId);
 			if (!dateProposal.AcceptingParticipants.IsEmpty())
 				dateProposal.AcceptingParticipants += ", ";
 			dateProposal.AcceptingParticipants += timeRange.Player.Name;
@@ -358,6 +401,7 @@ namespace Reunion.BL
 				{
 					var participant = reunionContext.Participants.First(p => p.Id == refusingParticipantId);
 					dateProposal.RefusingParticipantIds.Add(refusingParticipantId);
+					dateProposal.DontKnowParticipantIds.Remove(refusingParticipantId);
 					if (!dateProposal.RefusingParticipants.IsEmpty())
 						dateProposal.RefusingParticipants += ", ";
 					dateProposal.RefusingParticipants += participant.Name;
@@ -502,6 +546,47 @@ namespace Reunion.BL
 			reunionContext?.KnockStatemachine.Trigger(new KnockStatemachine.SignalKnock());
 		}
 
+		bool IReunionStatemachineBL.MissingDaysOfParticipant(int reunionId, int participantId)
+		{
+			var missingDayInformations = GetMissingDayInformations(reunionId);
+			if (missingDayInformations == null)
+				return false;
+			return missingDayInformations.ContainsKey(participantId);
+		}
+
+		void IReunionStatemachineBL.SendMissingDaysNotification(int reunionId, int participantId)
+		{
+			var missingDayInformations = GetMissingDayInformations(reunionId);
+			if (missingDayInformations == null)
+				return;
+			IList<DateTime> missingDays;
+			missingDayInformations.TryGetValue(participantId, out missingDays);
+
+
+			var reunionContext = _reunionContext;
+			var participant = reunionContext.Participants.First(p => p.Id == participantId);
+			string link = CreateParticipantDirektLink(participant);
+			var cultureInfo = GetCulture(participant.LanguageIsoCodeOfPlayer);
+			string missingDaysText = null;
+			foreach (var missingDay in missingDays)
+			{
+				if (missingDaysText == null)
+					missingDaysText = string.Empty;
+				else
+					missingDaysText += ", ";
+				missingDaysText += missingDay.ToString("d", cultureInfo);
+			}
+
+			_emailSender.SendEmail(
+				subject: string.Format(_resource.GetMissingDayNotificationMailSubject(cultureInfo),
+					reunionContext.Reunion.Name),
+				emailBody: string.Format(_resource.GetMissingDayNotificationBody(cultureInfo),
+					reunionContext.Reunion.Name,
+					missingDaysText,
+					link).Replace("\n", "<br>"),
+				receipients: new[] { participant.MailAddress });
+		}
+
 		#endregion
 
 		#region IReunionBL
@@ -616,6 +701,8 @@ namespace Reunion.BL
 				reunionContext = LoadReunion(reunionId, organizerId);
 				if (reunionContext == null)
 					return null;
+				if (!organizerId.HasValue)
+					organizerId = reunionContext.Organizer.Id;
 
 				if (reunionContext.CachedDateProposals != null)
 					return reunionContext.CachedDateProposals;
@@ -647,6 +734,7 @@ namespace Reunion.BL
 									break;
 								case PreferenceEnum.NoWay:
 									dateProposal.RefusingParticipantIds.Add(participantId);
+									dateProposal.DontKnowParticipantIds.Remove(participantId);
 									if (!dateProposal.RefusingParticipants.IsEmpty())
 										dateProposal.RefusingParticipants += ", ";
 									dateProposal.RefusingParticipants += timeRange.Player.Name;
@@ -662,6 +750,8 @@ namespace Reunion.BL
 									break;
 								case PreferenceEnum.MayBe:
 									// may not be choosable by organizer
+									dateProposal.MayBeParticipantIds.Add(participantId);
+									dateProposal.DontKnowParticipantIds.Remove(participantId);
 									break;
 								default:
 									throw new ArgumentOutOfRangeException();
@@ -708,7 +798,7 @@ namespace Reunion.BL
 						reunionContext.Reunion.Name),
 					body: string.Format(_resource.InvitationMailBody,
 						reunionContext.Reunion.Name,
-						reunionContext.Reunion.InvitationText.Replace("\n", "<br>"),
+						reunionContext.Reunion.InvitationText,
 						reunionContext.Reunion.Deadline,
 						_mailAddressOfReunion),
 					receipientMailAddresses: participantsToInvite);
@@ -755,10 +845,12 @@ namespace Reunion.BL
 			int reunionId, 
 			int participantId, 
 			out DateTime? finalInvitationdate, 
-			out bool? hasAcceptedFinalInvitationdate)
+			out bool? hasAcceptedFinalInvitationdate,
+			out IEnumerable<DateTime> daysToBeChecked)
 		{
 			finalInvitationdate = null;
 			hasAcceptedFinalInvitationdate = default(bool?);
+			daysToBeChecked = null;
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
 			if (reunionContext == null)
 				return null;
@@ -773,11 +865,16 @@ namespace Reunion.BL
 				case ParticipantStatusEnum.Accepted:
 					hasAcceptedFinalInvitationdate = true;
 					break;
+				case ParticipantStatusEnum.MissingInformation:
+				case ParticipantStatusEnum.ReactionOnFeedbackMissing:
+					var missingDayInformations = GetMissingDayInformations(reunionId);
+					IList<DateTime> daysToCheck;
+					missingDayInformations.TryGetValue(participantId, out daysToCheck);
+					daysToBeChecked = daysToCheck;
+					break;
 			}
 
 			var timeRanges = _dal.GetTimeRangesOfParticipant(participantId);
-
-
 			return timeRanges;
 		}
 
@@ -890,6 +987,13 @@ namespace Reunion.BL
 			participantStateMachine.Trigger(new ParticipantStatemachine.SignalDateRangesUpdated());
 			var organizerStatemachine = reunionContext.OrganizerStatemachine;
 			organizerStatemachine.Trigger(new OrganizerStatemachine.SignalDateRangesUpdated());
+
+			// touch statemachines
+			var stateMachines = reunionContext.ParticipantStatemachines.Values.Cast<IStateMachine>()
+				.Concat(new[] {reunionContext.OrganizerStatemachine});
+
+			foreach (var stateMachine in stateMachines)
+				stateMachine.Touch();
 		}
 
 		#endregion

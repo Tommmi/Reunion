@@ -43,10 +43,10 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                     @(Model.GetLocalizedText(nameof(Resource1.DateFound))) @(Model.HasAcceptedFinalInvitationdate.HasValue
-                                                                            ? "/ " + (Model.HasAcceptedFinalInvitationdate.Value
-                                                                                      ? Model.GetLocalizedText(nameof(Resource1.InvitationAccepted))
-                                                                                      : Model.GetLocalizedText(nameof(Resource1.InvitationRejected)))
-                                                                            : string.Empty)
+                                                                                 ? "/ " + (Model.HasAcceptedFinalInvitationdate.Value
+                                                                                     ? Model.GetLocalizedText(nameof(Resource1.InvitationAccepted))
+                                                                                     : Model.GetLocalizedText(nameof(Resource1.InvitationRejected)))
+                                                                                 : string.Empty)
                 </h3>
             </div>
             <div class="panel-body">
@@ -69,7 +69,8 @@
                         dlgText: Model.GetLocalizedText(nameof(Resource1.ConfirmFinaldateRejection), Model.FinalInvitationDate.Value.ToString(dateFormat)),
                         yes: Resource1.RejectFinaldateOnly,
                         no: Resource1.Cancel,
-                        hrefOnOk: Url.Action(nameof(ParticipantController.RejectFinalDateOnly), routeValues: new {id = Model.UnguessableParticipantId}));
+                        hrefOnOk: Url.Action(nameof(ParticipantController.RejectFinalDateOnly), routeValues: new {id = Model.UnguessableParticipantId}))
+                    ;
                 }
             </div>
         </div>
@@ -78,11 +79,25 @@
         @:<div class="collapse" id="collapseOne">
     }
 
+    @if (Model.UnsetDaysFormattedText != null)
+    {
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    @(Model.GetLocalizedText(nameof(Resource1.ActionRequired)))
+                </h3>
+            </div>
+            <div class="panel-body">
+                @(Model.GetLocalizedText(nameof(Resource1.CheckDays),Model.UnsetDaysFormattedText))
+            </div>
+        </div>
+    }
+
     @using (Html.BeginForm(
-        actionName:nameof(ParticipantController.Edit),
-        controllerName:nameof(ParticipantController).RemoveController(),
-        method:FormMethod.Post,
-        htmlAttributes:new { @class = "form-horizontal", role = "form", name="myForm"}))
+        actionName: nameof(ParticipantController.Edit),
+        controllerName: nameof(ParticipantController).RemoveController(),
+        method: FormMethod.Post,
+        htmlAttributes: new { @class = "form-horizontal", role = "form", name = "myForm" }))
     {
         @Html.AntiForgeryToken()
 
@@ -92,13 +107,11 @@
 
         <p class="info">
             @(Html.Raw(Model.GetLocalizedText(nameof(Resource1.HelloParticipant), Model.ParticipantName)))
-        </p>
-        if (anyMonthsMissing)
+        </p>if (anyMonthsMissing)
         {
             <p class="info text-danger">
                 @(Html.Raw(Model.GetLocalizedText(nameof(Resource1.MonthsMissing), monthsMissing)))
-            </p>
-        }
+            </p>}
         @Html.EditorFor(m => m.PossibleDates)
 
         <div class="form-group">
@@ -122,6 +135,7 @@
         @:</div>
     }
 }
+
 @section scripts
 {
     @Scripts.Render("~/bundles/calendar")

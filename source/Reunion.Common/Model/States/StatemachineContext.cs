@@ -85,8 +85,10 @@ namespace Reunion.Common.Model.States
 			)
 		{
 			CurrentState = currentState;
-			Player = player;
+			PlayerId = player?.Id??0;
+			//PlayerId = player.Id;
 			Reunion = reunion;
+			ReunionId = reunion.Id;
 			ElapseDate = elapseDate??DateTime.Now;
 			StatemachineTypeId = statemachineTypeId;
 			IsTerminated = isTerminated;
@@ -104,7 +106,12 @@ namespace Reunion.Common.Model.States
 		/// The meaning of the player, which is associated to a Reunion statemachine 
 		/// depends on the concrete statemachine. 
 		/// </summary>
-		public Player Player { get; set; }
+		public int PlayerId { get; set; }
+		///// <summary>
+		///// The meaning of the player, which is associated to a Reunion statemachine 
+		///// depends on the concrete statemachine. 
+		///// </summary>
+		//public Player Player { get; set; }
 		/// <summary>
 		/// The reunion to which the statemachine is associated to. 
 		/// A statemachine in Reunion is allways associated to exact one reunion.
