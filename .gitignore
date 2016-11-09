@@ -88,6 +88,9 @@ ipch/
 *.vspx
 *.sap
 
+# don't put WebJob in github
+Reunion.WebJob.TriggerTouch/
+
 # TFS 2012 Local Workspace
 $tf/
 
@@ -162,9 +165,6 @@ publish/
 Web-azure.config
 Web-local-development.config
 prepare4*.bat
-
-#WebJob
-Reunion.WebJob.TriggerTouch/
 
 # Microsoft Azure Build Output
 csx/
