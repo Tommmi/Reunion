@@ -1,3 +1,6 @@
+# version 1.0.1.0 09.11.2016
+- new feature: if there couldn't be found a date and some participants haven't
+  specified some most possible dates, they will get informed to update their calendar.
 # version 1.0.0.5 29.10.2016
 - bug fix: reunion may not change states on "dirty update" conflict
 - minimum time to escalate non-responding of a participant set to 2 days
