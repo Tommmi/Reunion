@@ -92,7 +92,7 @@ namespace Reunion.Web
 					minimumWaitTimeSeconds: appSettings.MaxReactionTimeHours * 3600,
 					startPage4Participant: appSettings.StartPage4Participant,
 					statusPageOfReunion: appSettings.StatusPageOfReunion,
-					mailAddressOfReunion: mailAddressOfReunion.Address);
+					mailAddressOfReunion: appSettings.MailAccount_MailAddress);
 			});
 
 			container.RegisterSingleton<ILanguagesService, LanguagesService>();
