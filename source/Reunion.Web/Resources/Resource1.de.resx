@@ -490,7 +490,7 @@ Falls Du in dem Zeitraum gar nicht kommen kannst, kannst Du das dort auch mittei
     <value>Einladung verschickt</value>
   </data>
   <data name="Answered" xml:space="preserve">
-    <value>Geantworted</value>
+    <value>Geantwortet</value>
   </data>
   <data name="NotAnswered1" xml:space="preserve">
     <value>Nicht geantwortet</value>
@@ -587,7 +587,7 @@ Diese Mail wurde automatisch vom Webservice &lt;b&gt;Reunion&lt;/b&gt; erstellt.
 {0} findet nun endlich statt.
 Als Termin wurde der &lt;b&gt;{1}&lt;/b&gt; gefunden.
 
-Alle Teilnehmer wurden benachrichtigt.
+Alle Teilnehmer wurden soeben benachrichtigt. Die endgültigen Zusagen stehen noch aus.
 </value>
   </data>
   <data name="Edit" xml:space="preserve">
@@ -747,5 +747,35 @@ Diese Email wurde automatisch durch &lt;b&gt;Reunion&lt;/b&gt; erstellt.
   <data name="CheckDays" xml:space="preserve">
     <value>Es konnte noch kein gemeinsammer Termin gefunden werden.
 Bitte folgende Tage prüfen und nachtragen: {0}</value>
+  </data>
+  <data name="MenuItemImpressumTitel" xml:space="preserve">
+    <value>Impressum</value>
+  </data>
+  <data name="ImpressumViewTitle" xml:space="preserve">
+    <value>Impressum</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Tel.</value>
+  </data>
+  <data name="Ceos" xml:space="preserve">
+    <value>Geschäftsführer</value>
+  </data>
+  <data name="Sitz" xml:space="preserve">
+    <value>Sitz</value>
+  </data>
+  <data name="Amtsgericht" xml:space="preserve">
+    <value>Amtsgericht</value>
+  </data>
+  <data name="UStIDNr" xml:space="preserve">
+    <value>USt.-ID-Nr.</value>
+  </data>
+  <data name="Haftpflichtversicherung" xml:space="preserve">
+    <value>Haftpflichtversicherung</value>
+  </data>
+  <data name="HaftpflichtversicherungDetails" xml:space="preserve">
+    <value>In- und Ausland, ausschließlich USA und USA-Territorien</value>
   </data>
 </root>

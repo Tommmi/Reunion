@@ -43,6 +43,8 @@ namespace Reunion.Web
 			container.RegisterPerRequest<ApplicationUserManager>();
 			container.RegisterPerRequest<ILazy<ApplicationUserManager>, TUtils.Common.DependencyInjection.Lazy<ApplicationUserManager>>(di => new TUtils.Common.DependencyInjection.Lazy<ApplicationUserManager>(di));
 			container.RegisterPerRequest<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication);
+
+			container.RegisterSingleton<ISystemTimeProvider, SystemTimeProvider>();
 			container.RegisterSingleton<IAppSettings, AppSettings>();
 			container.RegisterPerRequest<ApplicationSignInManager>();
 			container.RegisterSingleton<ILogWriter, Log4NetWriter>(c => new Log4NetWriter());
@@ -78,13 +80,14 @@ namespace Reunion.Web
 			container.Register<ITransactionService, ITransactionService<ReunionDbContext>>(
 				diContainer => diContainer.Get<ITransactionService<ReunionDbContext>>());
 			container.RegisterSingleton<IIdentityManager, IdentityManager>();
-			container.RegisterSingleton<IReunionDal, ReunionDal>();
+			container.RegisterSingleton<IReunionDal, ReunionDal<ReunionDbContext>>();
 			container.RegisterSingleton<ILazy<IReunionBL>, TUtils.Common.DependencyInjection.Lazy<IReunionBL>>(di => new TUtils.Common.DependencyInjection.Lazy<IReunionBL>(di));
 			container.Register<IReunionStatemachineBL, ReunionBL>(diContainer => (ReunionBL)diContainer.Get<IReunionBL>());
 			container.RegisterPerRequest<IReunionBL, ReunionBL>(diContainer =>
 			{
 				var appSettings = diContainer.Get<IAppSettings>();
 				return new ReunionBL(
+					diContainer.Get<ISystemTimeProvider>(),
 					diContainer.Get<ITransactionService<ReunionDbContext>>(),
 					diContainer.Get<IReunionDal>(),
 					diContainer.Get<IEmailSender>(),

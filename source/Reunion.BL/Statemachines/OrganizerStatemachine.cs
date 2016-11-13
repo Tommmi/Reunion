@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Reunion.Common;
 using Reunion.Common.Model;
 using Reunion.Common.Model.States;
+using TUtils.Common;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -22,13 +23,22 @@ namespace Reunion.BL.Statemachines
 	/// </summary>
 	public class OrganizerStatemachine : StateMachine<OrganizerStatemachine, OrganizerStatemachineEntity>
     {
-	    #region states
+		private readonly ISystemTimeProvider _systemTimeProvider;
+
+		#region states
 
 		public class BaseState : State
 		{
-			public BaseState(int currentState, bool isTerminatedState) : base(currentState, isTerminatedState)
+			private readonly ISystemTimeProvider _systemTimeProvider;
+
+			public BaseState(
+				ISystemTimeProvider systemTimeProvider,
+				int currentState, 
+				bool isTerminatedState) : base(currentState, isTerminatedState)
 			{
+				_systemTimeProvider = systemTimeProvider;
 			}
+
 			public override void OnSignal(Signal signal)
 			{
 				base.OnSignal(signal);
@@ -39,7 +49,7 @@ namespace Reunion.BL.Statemachines
 			public override void Touch()
 			{
 				base.Touch();
-				if ( DateTime.Now > Statemachine.StateMachineEntity.ElapseDate)
+				if ( _systemTimeProvider.LocalTime > Statemachine.StateMachineEntity.ElapseDate)
 					Statemachine.Trigger(new SignalDeadlineReached());
 			}
 		}
@@ -49,7 +59,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class Created : BaseState
 		{
-			public Created() : base((int)OrganizatorStatusEnum.Created, isTerminatedState: false)
+			public Created(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int)OrganizatorStatusEnum.Created, isTerminatedState: false)
 			{
 			}
 
@@ -63,10 +73,13 @@ namespace Reunion.BL.Statemachines
 				}
 			}
 		}
+
 		/// <summary>
 		/// state Created: reunion has been created, but organizer hasn't started planning process, yet.
 		/// </summary>
-		public Created StateCreated { get; private set; } = new Created();
+		public Created StateCreated => _stateCreated ?? (_stateCreated = new Created(_systemTimeProvider));
+		private Created _stateCreated;
+
 
 		/// <summary>
 		/// state Running: organizer has started planning process. Reunion hasn't found a possible date yet
@@ -74,7 +87,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class Running : BaseState
 		{
-			public Running() : base((int)OrganizatorStatusEnum.Running, isTerminatedState: false)
+			public Running(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int)OrganizatorStatusEnum.Running, isTerminatedState: false)
 			{
 			}
 			public override void OnSignal(Signal signal)
@@ -99,11 +112,13 @@ namespace Reunion.BL.Statemachines
 				}
 			}
 		}
+
 		/// <summary>
 		/// state Running: organizer has started planning process. Reunion hasn't found a possible date yet
 		/// for all required participants.
 		/// </summary>
-		public Running StateRunning { get; private set; } = new Running();
+		public Running StateRunning => _stateRunning ?? (_stateRunning = new Running(_systemTimeProvider));
+		private Running _stateRunning;
 
 		/// <summary>
 		/// state DateProposal: Reunion has found a proper date for all required participants.
@@ -111,7 +126,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class DateProposal : BaseState
 		{
-			public DateProposal() : base((int)OrganizatorStatusEnum.DateProposal, isTerminatedState: false)
+			public DateProposal(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int)OrganizatorStatusEnum.DateProposal, isTerminatedState: false)
 			{
 			}
 
@@ -136,8 +151,8 @@ namespace Reunion.BL.Statemachines
 		/// state DateProposal: Reunion has found a proper date for all required participants.
 		/// Organizer hasn't chooesed a date yet
 		/// </summary>
-		public DateProposal StateDateProposal { get; private set; } = new DateProposal();
-
+		public DateProposal StateDateProposal => _stateDateProposal??(_stateDateProposal = new DateProposal(_systemTimeProvider));
+		private DateProposal _stateDateProposal;
 
 		/// <summary>
 		/// state FinalInvitation: organizer finally has choosen a date for the reunion.
@@ -146,7 +161,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class FinalInvitation : BaseState
 		{
-			public FinalInvitation() : base((int)OrganizatorStatusEnum.FinalInvitation, isTerminatedState: false)
+			public FinalInvitation(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider,(int)OrganizatorStatusEnum.FinalInvitation, isTerminatedState: false)
 			{
 			}
 			public override void OnSignal(Signal signal)
@@ -166,14 +181,15 @@ namespace Reunion.BL.Statemachines
 		/// The participants have got the final invitations, but not all of them have answered and 
 		/// agreed definitely.
 		/// </summary>
-		public FinalInvitation StateFinalInvitation { get; private set; } = new FinalInvitation();
+		public FinalInvitation StateFinalInvitation => _stateFinalInvitation??(_stateFinalInvitation=new  FinalInvitation(_systemTimeProvider));
+		private FinalInvitation _stateFinalInvitation;
 
 		/// <summary>
 		/// state FinishedSucceeded: all participants, who have time that day have accepted the the final invitation.
 		/// </summary>
 		public class FinishedSucceeded : BaseState
 		{
-			public FinishedSucceeded() : base((int)OrganizatorStatusEnum.FinishedSucceeded, isTerminatedState: true)
+			public FinishedSucceeded(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider,(int)OrganizatorStatusEnum.FinishedSucceeded, isTerminatedState: true)
 			{
 			}
 
@@ -204,14 +220,15 @@ namespace Reunion.BL.Statemachines
 		/// <summary>
 		/// state FinishedSucceeded: all participants, who have time that day have accepted the the final invitation.
 		/// </summary>
-		public FinishedSucceeded StateFinishedSucceeded { get; private set; } = new FinishedSucceeded();
+		public FinishedSucceeded StateFinishedSucceeded => _stateFinishedSucceeded??(_stateFinishedSucceeded=new FinishedSucceeded(_systemTimeProvider));
+		private FinishedSucceeded _stateFinishedSucceeded;
 
 		/// <summary>
 		/// state FinishedFailed: deadline of reunion planning has reached but we couldn't make a deal.
 		/// </summary>
 		public class FinishedFailed : BaseState
 		{
-			public FinishedFailed() : base((int)OrganizatorStatusEnum.FinishedFailed, isTerminatedState: true)
+			public FinishedFailed(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int)OrganizatorStatusEnum.FinishedFailed, isTerminatedState: true)
 			{
 			}
 
@@ -225,7 +242,8 @@ namespace Reunion.BL.Statemachines
 		/// <summary>
 		/// state FinishedFailed: deadline of reunion planning has reached but we couldn't make a deal.
 		/// </summary>
-		public FinishedFailed StateFinishedFailed { get; private set; } = new FinishedFailed();
+		public FinishedFailed StateFinishedFailed => _stateFinishedFailed??(_stateFinishedFailed=new FinishedFailed(_systemTimeProvider));
+		private FinishedFailed _stateFinishedFailed;
 
 		#endregion
 
@@ -234,9 +252,12 @@ namespace Reunion.BL.Statemachines
 		public OrganizerStatemachine(
 			OrganizerStatemachineEntity statemachineEntity,
 			IReunionDal dal,
-			IReunionStatemachineBL bl)
+			IReunionStatemachineBL bl,
+			ISystemTimeProvider systemTimeProvider)
 			: base(statemachineEntity, dal, bl)
 		{
+			_systemTimeProvider = systemTimeProvider;
+
 			Init();
 		}
 

@@ -1,22 +1,42 @@
 ﻿@using Reunion.Web.Resources
 @using Reunion.Web.Models
 @{
-    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.ContactViewTitle);
+    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.ImpressumViewTitle);
 }
 @section body
 {
-    <h2>@Resource1.ContactViewTitle</h2>
-    <h3>@ViewBag.Message</h3>
+    <h2>@Resource1.ImpressumViewTitle</h2>
 
     <address>
-        One Microsoft Way<br/>
-        Redmond, WA 98052-6399<br/>
-        <abbr title="Phone">P:</abbr>
-        425.555.0100
-    </address>
+        <h3>Gerlach und Sanabria Partnerschaft, Softwareingenieure</h3>
 
-    <address>
-        <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br/>
-        <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-    </address>
+        <p>
+            <b>@Resource1.Address:</b><br>
+            Katharinenstr. 35<br>
+            31135 Hildesheim
+        </p>
+        <p>
+            <b>@Resource1.Phone:</b> 05121-102258<br>
+            <b>www</b>.gerlach-it.de<br>
+        </p>
+        <p>
+            <b>@Resource1.Ceos:</b><br>
+            Emilia Sanabria-Mora<br>
+            Thomas Gerlach
+        </p>
+        <p>
+            <b>@Resource1.Sitz:</b> Sitz Hildesheim<br>
+            <b>@Resource1.Amtsgericht:</b> Hannover, PR200184
+        </p>
+        <p>
+            <b>@Resource1.UStIDNr.:</b> DE 256265712
+        </p>
+        <p>
+            <b>@Resource1.Haftpflichtversicherung:</b> <br>
+            CLIC (@Resource1.HaftpflichtversicherungDetails)<br>
+            HDI-Gerling Firmen und Privat Vers. AG<br>
+            Postfach 2127, 30021 Hannover<br>
+        </p>
+     </address>
+
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using Reunion.Common;
 using Reunion.Common.Model;
 using Reunion.Common.Model.States;
+using TUtils.Common;
 using TUtils.Common.EF6;
 using TUtils.Common.EF6.Transaction;
 
@@ -12,7 +14,8 @@ namespace Reunion.DAL
 	/// <summary>
 	/// implementation of IReunionDal
 	/// </summary>
-	public class ReunionDal : IReunionDal
+	public class ReunionDal<TDbContext> : IReunionDal
+		where TDbContext : DbContext, IReunionDbContext
 	{
 		#region fields
 		/// <summary>
@@ -21,7 +24,8 @@ namespace Reunion.DAL
 		/// </summary>
 		private const int MaxCountTouchTasks = 100;
 
-		private readonly ITransactionService<ReunionDbContext> _transactionService;
+		private readonly ITransactionService<TDbContext> _transactionService;
+		private readonly ISystemTimeProvider _systemTimeProvider;
 
 		#endregion
 
@@ -31,10 +35,13 @@ namespace Reunion.DAL
 		/// 
 		/// </summary>
 		/// <param name="transactionService"></param>
+		/// <param name="systemTimeProvider"></param>
 		public ReunionDal(
-			ITransactionService<ReunionDbContext> transactionService)
+			ITransactionService<TDbContext> transactionService,
+			ISystemTimeProvider systemTimeProvider)
 		{
 			_transactionService = transactionService;
+			_systemTimeProvider = systemTimeProvider;
 		}
 
 		#endregion
@@ -54,7 +61,7 @@ namespace Reunion.DAL
 		/// </param>
 		private static void AddDateRanges(
 			IEnumerable<TimeRange> timeRanges, 
-			ReunionDbContext db,
+			TDbContext db,
 			Player player, 
 			ReunionEntity reunionEntity)
 		{
@@ -88,7 +95,7 @@ namespace Reunion.DAL
 		/// created participant (attached to DbContext)
 		/// </returns>
 		private static Participant CreateParticipant(
-			ReunionDbContext db,
+			TDbContext db,
 			ReunionEntity reunionEntity,
 			Participant newParticipant)
 		{
@@ -157,7 +164,7 @@ namespace Reunion.DAL
 		/// <param name="db"></param>
 		/// <param name="registeredUserId"></param>
 		/// <returns></returns>
-		private static bool ReunionNameAllreadyExist(int reunionId, string newReunionName, ReunionDbContext db, string registeredUserId)
+		private static bool ReunionNameAllreadyExist(int reunionId, string newReunionName, TDbContext db, string registeredUserId)
 		{
 			return
 				(from organizer in db.Organizers
@@ -175,7 +182,7 @@ namespace Reunion.DAL
 		/// shrinks table of TouchTasks untill it contains at maximum "MaxCountTouchTasks" (100) items.
 		/// </summary>
 		/// <param name="db"></param>
-		private static void RemoveObsoleteTouchTasks(ReunionDbContext db)
+		private static void RemoveObsoleteTouchTasks(TDbContext db)
 		{
 			var count = db.TouchTasks.Count();
 			if (count > MaxCountTouchTasks)
@@ -192,7 +199,7 @@ namespace Reunion.DAL
 		/// <param name="player">
 		/// must be attached to DbContext
 		/// </param>
-		private static void RemovePlayer(ReunionDbContext db, Player player)
+		private static void RemovePlayer(TDbContext db, Player player)
 		{
 			var statemachines = db.StateMachines.Where(s => s.PlayerId == player.Id).ToList();
 			db.StateMachines.RemoveRange(statemachines);
@@ -663,7 +670,7 @@ namespace Reunion.DAL
 			return _transactionService.DoInTransaction(db =>
 			{
 				var touchTaskEntity = db.TouchTasks.Create();
-				touchTaskEntity.CreationTimestamp = DateTime.Now;
+				touchTaskEntity.CreationTimestamp = _systemTimeProvider.LocalTime;
 
 				db.TouchTasks.Add(touchTaskEntity);
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +8,7 @@ using Reunion.Common;
 using Reunion.Common.Email;
 using Reunion.Common.Model;
 using Reunion.Common.Model.States;
+using TUtils.Common;
 using TUtils.Common.Extensions;
 using TUtils.Common.Transaction;
 
@@ -108,6 +108,7 @@ namespace Reunion.BL
 		/// </summary>
 		private readonly string _statusPageOfReunion;
 
+		private readonly ISystemTimeProvider _systemTimeProvider;
 		private readonly ITransactionService _transactionService;
 
 		#endregion
@@ -117,6 +118,7 @@ namespace Reunion.BL
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="systemTimeProvider"></param>
 		/// <param name="transactionService"></param>
 		/// <param name="dal"></param>
 		/// <param name="emailSender"></param>
@@ -134,6 +136,7 @@ namespace Reunion.BL
 		/// 
 		/// </param>
 		public ReunionBL(
+			ISystemTimeProvider systemTimeProvider,
 			ITransactionService transactionService,
 			IReunionDal dal,
 			IEmailSender emailSender,
@@ -143,6 +146,7 @@ namespace Reunion.BL
 			string statusPageOfReunion,
 			string mailAddressOfReunion)
 		{
+			_systemTimeProvider = systemTimeProvider;
 			_transactionService = transactionService;
 			_dal = dal;
 			_emailSender = emailSender;
@@ -274,11 +278,11 @@ namespace Reunion.BL
 				if (reunionInfo == null || (organizerId.HasValue && reunionInfo.Organizer.Id != organizerId))
 					return null;
 
-				var organizerStateMachine = new OrganizerStatemachine(reunionInfo.OrganizerStatemachineEntity, _dal, this);
+				var organizerStateMachine = new OrganizerStatemachine(reunionInfo.OrganizerStatemachineEntity, _dal, this, _systemTimeProvider);
 				var knockStatemachine = new KnockStatemachine(reunionInfo.KnockStatemachineEntity, _dal, this);
 
 				var participantStateMachines = reunionInfo.ParticipantStatemachines.Select(s =>
-					new ParticipantStatemachine(s, _minimumWaitTimeSeconds, _dal, this));
+					new ParticipantStatemachine(s, _minimumWaitTimeSeconds, _dal, this,_systemTimeProvider));
 
 				var timeRangesOfOrganizer = _dal.GetTimeRangesOfOrganizer(reunionId, reunionInfo.Organizer.Id);
 
@@ -945,10 +949,10 @@ namespace Reunion.BL
 						new KnockStatemachine(statemachineEntity as KnockStatemachineEntity, _dal, this).Touch();
 						break;
 					case StatemachineIdEnum.ParticipantStatemachine:
-						new ParticipantStatemachine(statemachineEntity as ParticipantStatemachineEntity, _minimumWaitTimeSeconds, _dal, this).Touch();
+						new ParticipantStatemachine(statemachineEntity as ParticipantStatemachineEntity, _minimumWaitTimeSeconds, _dal, this,_systemTimeProvider).Touch();
 						break;
 					case StatemachineIdEnum.OrganizerStatemachine:
-						new OrganizerStatemachine(statemachineEntity as OrganizerStatemachineEntity, _dal, this).Touch();
+						new OrganizerStatemachine(statemachineEntity as OrganizerStatemachineEntity, _dal, this,_systemTimeProvider).Touch();
 						break;
 					default:
 						throw new ApplicationException("53guas8924h " + statemachineEntity.StatemachineTypeId);

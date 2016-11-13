@@ -556,11 +556,29 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Address.
+        /// </summary>
+        public static string Address {
+            get {
+                return ResourceManager.GetString("Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add this participant.
         /// </summary>
         public static string AddThisParticipant {
             get {
                 return ResourceManager.GetString("AddThisParticipant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local court.
+        /// </summary>
+        public static string Amtsgericht {
+            get {
+                return ResourceManager.GetString("Amtsgericht", resourceCulture);
             }
         }
         
@@ -579,6 +597,15 @@ namespace Reunion.Web.Resources {
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CEOs.
+        /// </summary>
+        public static string Ceos {
+            get {
+                return ResourceManager.GetString("Ceos", resourceCulture);
             }
         }
         
@@ -903,7 +930,7 @@ namespace Reunion.Web.Resources {
         ///
         ///{0} will be taking place on &lt;b&gt;{1}&lt;/b&gt;.
         ///
-        ///All participants have been informed..
+        ///All participants have been informed. We are waiting for their final commitments..
         /// </summary>
         public static string FinalInvitationMailBody {
             get {
@@ -973,6 +1000,24 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Insurance.
+        /// </summary>
+        public static string Haftpflichtversicherung {
+            get {
+                return ResourceManager.GetString("Haftpflichtversicherung", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At home and abroad, excluding US and US territories.
+        /// </summary>
+        public static string HaftpflichtversicherungDetails {
+            get {
+                return ResourceManager.GetString("HaftpflichtversicherungDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hello {0}! &lt;br&gt;
         ///Could you please mark your preferred dates regarding the meeting in the calendar ?.
         /// </summary>
@@ -988,6 +1033,15 @@ namespace Reunion.Web.Resources {
         public static string HelloYou {
             get {
                 return ResourceManager.GetString("HelloYou", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Legal info.
+        /// </summary>
+        public static string ImpressumViewTitle {
+            get {
+                return ResourceManager.GetString("ImpressumViewTitle", resourceCulture);
             }
         }
         
@@ -1254,6 +1308,15 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Legal info.
+        /// </summary>
+        public static string MenuItemImpressumTitel {
+            get {
+                return ResourceManager.GetString("MenuItemImpressumTitel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string MenuItemLoginTitle {
@@ -1421,6 +1484,15 @@ namespace Reunion.Web.Resources {
         public static string PerfectDay {
             get {
                 return ResourceManager.GetString("PerfectDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone.
+        /// </summary>
+        public static string Phone {
+            get {
+                return ResourceManager.GetString("Phone", resourceCulture);
             }
         }
         
@@ -1646,6 +1718,15 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Registered office.
+        /// </summary>
+        public static string Sitz {
+            get {
+                return ResourceManager.GetString("Sitz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
         public static string Start {
@@ -1768,6 +1849,15 @@ namespace Reunion.Web.Resources {
         public static string UpdateParticipantsPreferences {
             get {
                 return ResourceManager.GetString("UpdateParticipantsPreferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tax ID number.
+        /// </summary>
+        public static string UStIDNr {
+            get {
+                return ResourceManager.GetString("UStIDNr", resourceCulture);
             }
         }
         

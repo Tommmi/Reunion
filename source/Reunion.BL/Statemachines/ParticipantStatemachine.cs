@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Reunion.Common;
 using Reunion.Common.Model;
 using Reunion.Common.Model.States;
+using TUtils.Common;
 using TUtils.Common.Extensions;
 
 namespace Reunion.BL.Statemachines
@@ -20,14 +21,20 @@ namespace Reunion.BL.Statemachines
 
 		public class BaseState : State
 		{
-			public BaseState(int currentState, bool isTerminated) : base(currentState, isTerminated)
+			protected readonly ISystemTimeProvider _systemTimeProvider;
+
+			public BaseState(
+				ISystemTimeProvider systemTimeProvider,
+				int currentState, 
+				bool isTerminated) : base(currentState, isTerminated)
 			{
+				_systemTimeProvider = systemTimeProvider;
 			}
 
 			public override void Touch()
 			{
 				base.Touch();
-				if (DateTime.Now > Statemachine.StateMachineEntity.ElapseDate)
+				if (_systemTimeProvider.LocalTime > Statemachine.StateMachineEntity.ElapseDate)
 					Statemachine.Trigger(new SignalTimeElapsed());
 			}
 
@@ -41,7 +48,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class Created : BaseState
 		{
-			public Created() : base((int)ParticipantStatusEnum.Created, isTerminated:false)
+			public Created(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int)ParticipantStatusEnum.Created, isTerminated:false)
 			{
 			}
 
@@ -52,11 +59,13 @@ namespace Reunion.BL.Statemachines
 					SetNewState(Statemachine.StateWaitOnLoginForInvitation);
 			}
 		}
+
 		/// <summary>
 		/// state Created: participant has been added to reunion, but did not received 
 		/// invitation mail yet
 		/// </summary>
-		public Created StateCreated { get; private set; } = new Created();
+		public Created StateCreated => _stateCreated??(_stateCreated= new Created(_systemTimeProvider));
+		private Created _stateCreated;
 
 
 		/// <summary>
@@ -65,14 +74,15 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class WaitOnLoginForInvitation : BaseState
 		{
-			public WaitOnLoginForInvitation() : base((int)ParticipantStatusEnum.WaitOnLoginForInvitation, isTerminated: false)
+			public WaitOnLoginForInvitation(ISystemTimeProvider systemTimeProvider) 
+				: base(systemTimeProvider, (int)ParticipantStatusEnum.WaitOnLoginForInvitation, isTerminated: false)
 			{
 			}
 
 			protected override void OnEntered(State<ParticipantStatemachine, ParticipantStatemachineEntity> oldState)
 			{
 				base.OnEntered(oldState);
-				Statemachine.StateMachineEntity.ElapseDate = DateTime.Now.AddSeconds(Statemachine.MinimumWaitTimeSeconds);
+				Statemachine.StateMachineEntity.ElapseDate = _systemTimeProvider.LocalTime.AddSeconds(Statemachine.MinimumWaitTimeSeconds);
 			}
 
 			public override void OnSignal(Signal signal)
@@ -84,11 +94,14 @@ namespace Reunion.BL.Statemachines
 					SetNewState(Statemachine.StateReactionOnInvitationMissing);
 			}
 		}
+
 		/// <summary>
 		/// state WaitOnLoginForInvitation: participant has got primer invitation mail but didn't 
 		/// visit the page yet.
 		/// </summary>
-		public WaitOnLoginForInvitation StateWaitOnLoginForInvitation { get; private set; } = new WaitOnLoginForInvitation();
+		public WaitOnLoginForInvitation StateWaitOnLoginForInvitation 
+			=> _stateWaitOnLoginForInvitation ?? (_stateWaitOnLoginForInvitation = new WaitOnLoginForInvitation(_systemTimeProvider));
+		private WaitOnLoginForInvitation _stateWaitOnLoginForInvitation;
 
 		/// <summary>
 		/// state ReactionOnInvitationMissing:  participant has got primer invitation mail but didn't 
@@ -96,7 +109,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class ReactionOnInvitationMissing : BaseState
 		{
-			public ReactionOnInvitationMissing() : base((int)ParticipantStatusEnum.ReactionOnInvitationMissing, isTerminated: false)
+			public ReactionOnInvitationMissing(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int)ParticipantStatusEnum.ReactionOnInvitationMissing, isTerminated: false)
 			{
 			}
 
@@ -117,7 +130,8 @@ namespace Reunion.BL.Statemachines
 		/// state ReactionOnInvitationMissing:  participant has got primer invitation mail but didn't 
 		/// visit the page for a long time.
 		/// </summary>
-		public ReactionOnInvitationMissing StateReactionOnInvitationMissing { get; private set; } = new ReactionOnInvitationMissing();
+		public ReactionOnInvitationMissing StateReactionOnInvitationMissing => _stateReactionOnInvitationMissing??(_stateReactionOnInvitationMissing= new ReactionOnInvitationMissing(_systemTimeProvider));
+		private ReactionOnInvitationMissing _stateReactionOnInvitationMissing;
 
 		/// <summary>
 		///  state Invitated: participant has reacted at minimum one time on the primaer invitation mail,
@@ -125,7 +139,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class Invitated : BaseState
 		{
-			public Invitated() : base((int)ParticipantStatusEnum.Invitated, isTerminated: false)
+			public Invitated(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int)ParticipantStatusEnum.Invitated, isTerminated: false)
 			{
 			}
 
@@ -176,21 +190,23 @@ namespace Reunion.BL.Statemachines
 		///  state Invitated: participant has reacted at minimum one time on the primaer invitation mail,
 		/// but hasn't git a final invitation mail, yet.
 		/// </summary>
-		public Invitated StateInvitated { get; private set; } = new Invitated();
+		public Invitated StateInvitated => _stateInvitated??(_stateInvitated = new Invitated(_systemTimeProvider));
+		private Invitated _stateInvitated;
 
 		/// <summary>
 		/// state FinallyInvitated: participant has got a final invitation mail, but hasn't reacted on that mail yet.
 		/// </summary>
 		public class FinallyInvitated : BaseState
 		{
-			public FinallyInvitated() : base((int) ParticipantStatusEnum.FinallyInvitated, isTerminated: false)
+			public FinallyInvitated(ISystemTimeProvider systemTimeProvider) 
+				: base(systemTimeProvider, (int) ParticipantStatusEnum.FinallyInvitated, isTerminated: false)
 			{
 			}
 
 			protected override void OnEntered(State<ParticipantStatemachine, ParticipantStatemachineEntity> oldState)
 			{
 				base.OnEntered(oldState);
-				Statemachine.StateMachineEntity.ElapseDate = DateTime.Now.AddSeconds(Statemachine.MinimumWaitTimeSeconds);
+				Statemachine.StateMachineEntity.ElapseDate = _systemTimeProvider.LocalTime.AddSeconds(Statemachine.MinimumWaitTimeSeconds);
 			}
 
 			public override void OnSignal(Signal signal)
@@ -212,7 +228,8 @@ namespace Reunion.BL.Statemachines
 		/// <summary>
 		/// state FinallyInvitated: participant has got a final invitation mail, but hasn't reacted on that mail yet.
 		/// </summary>
-		public FinallyInvitated StateFinallyInvitated { get; private set; } = new FinallyInvitated();
+		public FinallyInvitated StateFinallyInvitated => _stateFinallyInvitated??(_stateFinallyInvitated=new FinallyInvitated(_systemTimeProvider));
+		private FinallyInvitated _stateFinallyInvitated;
 
 		/// <summary>
 		/// state ReactionOnFinalInvitationMissing: participant has got a final invitation mail, 
@@ -220,7 +237,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class ReactionOnFinalInvitationMissing : BaseState
 		{
-			public ReactionOnFinalInvitationMissing() : base((int) ParticipantStatusEnum.ReactionOnFinalInvitationMissing, isTerminated: false)
+			public ReactionOnFinalInvitationMissing(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int) ParticipantStatusEnum.ReactionOnFinalInvitationMissing, isTerminated: false)
 			{
 			}
 
@@ -248,14 +265,15 @@ namespace Reunion.BL.Statemachines
 		/// state ReactionOnFinalInvitationMissing: participant has got a final invitation mail, 
 		/// but hasn't reacted on that mail for a long time.
 		/// </summary>
-		public ReactionOnFinalInvitationMissing StateReactionOnFinalInvitationMissing { get; private set; } = new ReactionOnFinalInvitationMissing();
+		public ReactionOnFinalInvitationMissing StateReactionOnFinalInvitationMissing => _stateReactionOnFinalInvitationMissing??(_stateReactionOnFinalInvitationMissing=new ReactionOnFinalInvitationMissing(_systemTimeProvider));
+		private ReactionOnFinalInvitationMissing _stateReactionOnFinalInvitationMissing;
 
 		/// <summary>
 		/// state RejectedInvitation: participant has rejected the final invitation.
 		/// </summary>
 		public class RejectedInvitation : BaseState
 		{
-			public RejectedInvitation() : base((int) ParticipantStatusEnum.RejectedInvitation, isTerminated: false)
+			public RejectedInvitation(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int) ParticipantStatusEnum.RejectedInvitation, isTerminated: false)
 			{
 			}
 
@@ -274,14 +292,15 @@ namespace Reunion.BL.Statemachines
 		/// <summary>
 		/// state RejectedInvitation: participant has rejected the final invitation.
 		/// </summary>
-		public RejectedInvitation StateRejectedInvitation { get; private set; } = new RejectedInvitation();
+		public RejectedInvitation StateRejectedInvitation => _stateRejectedInvitation??(_stateRejectedInvitation=new RejectedInvitation(_systemTimeProvider));
+		private RejectedInvitation _stateRejectedInvitation;
 
 		/// <summary>
 		/// state Accepted: participant has accepted final invitation
 		/// </summary>
 		public class Accepted : BaseState
 		{
-			public Accepted() : base((int) ParticipantStatusEnum.Accepted, isTerminated: true)
+			public Accepted(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int) ParticipantStatusEnum.Accepted, isTerminated: true)
 			{
 			}
 
@@ -300,14 +319,16 @@ namespace Reunion.BL.Statemachines
 		/// <summary>
 		/// state Accepted: participant has accepted final invitation
 		/// </summary>
-		public Accepted StateAccepted { get; private set; } = new Accepted();
+		public Accepted StateAccepted => _stateAccepted??(_stateAccepted=new Accepted(_systemTimeProvider));
+		private Accepted _stateAccepted;
 
 		/// <summary>
 		/// state MissingInformation: The participant has so far not given any information on the most possible days.
 		/// </summary>
 		public class MissingInformation : BaseState
 		{
-			public MissingInformation() : base((int) ParticipantStatusEnum.MissingInformation, isTerminated: false)
+			public MissingInformation(ISystemTimeProvider systemTimeProvider) 
+				: base(systemTimeProvider, (int) ParticipantStatusEnum.MissingInformation, isTerminated: false)
 			{
 			}
 
@@ -315,7 +336,7 @@ namespace Reunion.BL.Statemachines
 			{
 				base.OnEntered(oldState);
 				Bl.SendMissingDaysNotification(ReunionId, ParticipantId);
-				Statemachine.StateMachineEntity.ElapseDate = DateTime.Now.AddSeconds(Statemachine.MinimumWaitTimeSeconds);
+				Statemachine.StateMachineEntity.ElapseDate = _systemTimeProvider.LocalTime.AddSeconds(Statemachine.MinimumWaitTimeSeconds);
 			}
 
 			public override void OnSignal(Signal signal)
@@ -343,7 +364,8 @@ namespace Reunion.BL.Statemachines
 		/// <summary>
 		/// state MissingInformation: The participant has so far not given any information on the most possible days.
 		/// </summary>
-		public MissingInformation StateMissingInformation { get; private set; } = new MissingInformation();
+		public MissingInformation StateMissingInformation => _stateMissingInformation??(_stateMissingInformation=new MissingInformation(_systemTimeProvider));
+		private MissingInformation _stateMissingInformation;
 
 		/// <summary>
 		/// state ReactionOnFeedbackMissing: The participant has so far not given any information on the most possible days
@@ -351,7 +373,7 @@ namespace Reunion.BL.Statemachines
 		/// </summary>
 		public class ReactionOnFeedbackMissing : BaseState
 		{
-			public ReactionOnFeedbackMissing() : base((int) ParticipantStatusEnum.ReactionOnFeedbackMissing, isTerminated: false)
+			public ReactionOnFeedbackMissing(ISystemTimeProvider systemTimeProvider) : base(systemTimeProvider, (int) ParticipantStatusEnum.ReactionOnFeedbackMissing, isTerminated: false)
 			{
 			}
 
@@ -385,7 +407,8 @@ namespace Reunion.BL.Statemachines
 		/// state ReactionOnFeedbackMissing: The participant has so far not given any information on the most possible days
 		/// for a long time.
 		/// </summary>
-		public ReactionOnFeedbackMissing StateReactionOnFeedbackMissing { get; private set; } = new ReactionOnFeedbackMissing();
+		public ReactionOnFeedbackMissing StateReactionOnFeedbackMissing => _stateReactionOnFeedbackMissing??(_stateReactionOnFeedbackMissing=new ReactionOnFeedbackMissing(_systemTimeProvider));
+		private ReactionOnFeedbackMissing _stateReactionOnFeedbackMissing;
 
 		#endregion
 
@@ -401,9 +424,16 @@ namespace Reunion.BL.Statemachines
 		/// </param>
 		/// <param name="dal"></param>
 		/// <param name="bl"></param>
-		public ParticipantStatemachine(ParticipantStatemachineEntity statemachineEntity, int minimumWaitTimeSeconds, IReunionDal dal, IReunionStatemachineBL bl) : base(statemachineEntity, dal, bl)
+		/// <param name="systemTimeProvider"></param>
+		public ParticipantStatemachine(
+			ParticipantStatemachineEntity statemachineEntity,
+			int minimumWaitTimeSeconds, 
+			IReunionDal dal, 
+			IReunionStatemachineBL bl,
+			ISystemTimeProvider systemTimeProvider) : base(statemachineEntity, dal, bl)
 		{
 			MinimumWaitTimeSeconds = minimumWaitTimeSeconds;
+			_systemTimeProvider = systemTimeProvider;
 			Init();
 		}
 
@@ -411,7 +441,16 @@ namespace Reunion.BL.Statemachines
 		{
 			return new State[]
 			{
-				StateCreated, StateFinallyInvitated, StateInvitated, StateReactionOnFinalInvitationMissing, StateWaitOnLoginForInvitation, StateReactionOnInvitationMissing, StateAccepted, StateRejectedInvitation, StateMissingInformation, StateReactionOnFeedbackMissing,
+				StateCreated,
+				StateFinallyInvitated,
+				StateInvitated,
+				StateReactionOnFinalInvitationMissing,
+				StateWaitOnLoginForInvitation,
+				StateReactionOnInvitationMissing,
+				StateAccepted,
+				StateRejectedInvitation,
+				StateMissingInformation,
+				StateReactionOnFeedbackMissing,
 			};
 		}
 
@@ -494,6 +533,7 @@ namespace Reunion.BL.Statemachines
 		#region public
 
 		public readonly int MinimumWaitTimeSeconds;
+		private readonly ISystemTimeProvider _systemTimeProvider;
 		public int ParticipantId => StateMachineEntity.PlayerId;
 
 		#endregion

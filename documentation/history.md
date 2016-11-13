@@ -1,3 +1,6 @@
+# version 1.0.1.1 13.11.2016
+- component tests added
+- impressum added
 # version 1.0.1.0 09.11.2016
 - new feature: if there couldn't be found a date and some participants haven't
   specified some most possible dates, they will get informed to update their calendar.

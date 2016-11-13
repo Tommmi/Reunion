@@ -84,6 +84,15 @@ namespace Reunion.Web.Controllers
 				daysToBeChecked: daysToBeChecked));
 		}
 
+		/// <summary>
+		/// saves updates to the preferences of a participant
+		/// </summary>
+		/// <param name="model">
+		/// all ignored except properties 
+		/// - PossibleDates
+		/// - UnguessableParticipantId
+		/// </param>
+		/// <returns></returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(ParticipantFeedbackViewModel model)

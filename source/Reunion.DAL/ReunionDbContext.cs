@@ -4,7 +4,7 @@ using Reunion.Common.Model.States;
 
 namespace Reunion.DAL
 {
-	public class ReunionDbContext : DbContext
+	public class ReunionDbContext : DbContext, IReunionDbContext
 	{
 		public ReunionDbContext() : base("ReunionConnectionString")
 		{
