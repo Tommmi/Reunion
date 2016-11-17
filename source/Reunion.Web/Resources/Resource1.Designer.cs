@@ -1000,6 +1000,15 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gerlach und Sanabria Partnerschaft, Softwareingenieure.
+        /// </summary>
+        public static string GerlachIt {
+            get {
+                return ResourceManager.GetString("GerlachIt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Insurance.
         /// </summary>
         public static string Haftpflichtversicherung {
@@ -1326,6 +1335,15 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to My reunions.
+        /// </summary>
+        public static string MenuItemMyReunionsTitel {
+            get {
+                return ResourceManager.GetString("MenuItemMyReunionsTitel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Register.
         /// </summary>
         public static string MenuItemRegisterTitle {
@@ -1385,6 +1403,15 @@ namespace Reunion.Web.Resources {
         public static string MoreAboutReunion {
             get {
                 return ResourceManager.GetString("MoreAboutReunion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tutorial.
+        /// </summary>
+        public static string MoreAboutReunionTitle {
+            get {
+                return ResourceManager.GetString("MoreAboutReunionTitle", resourceCulture);
             }
         }
         
@@ -1858,6 +1885,48 @@ namespace Reunion.Web.Resources {
         public static string UStIDNr {
             get {
                 return ResourceManager.GetString("UStIDNr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reunion is a webservice, with which many participants of a reunion can negotiate a day for the meeting.
+        ///The participants are automatically contacted by the service via email and fill in their personal 
+        ///preferences regarding the meeting in a personal calendar:.
+        /// </summary>
+        public static string VisionText1 {
+            get {
+                return ResourceManager.GetString("VisionText1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Participants can update their calendar at any time, 
+        ///even after a final date has already been set..
+        /// </summary>
+        public static string VisionText2 {
+            get {
+                return ResourceManager.GetString("VisionText2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The organizer will be informed by the service, when.
+        /// </summary>
+        public static string VisionText3 {
+            get {
+                return ResourceManager.GetString("VisionText3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;li&gt;there is a possible date for all participants whose participation is required. &lt;/li&gt;
+        ///&lt;li&gt;a participant does not respond &lt;/li&gt;
+        ///&lt;li&gt;finally all participants have agreed&lt;/li&gt;
+        ///&lt;li&gt;the date entered as the deadline was reached and no appointment could be found &lt;/li&gt;.
+        /// </summary>
+        public static string VisionText4 {
+            get {
+                return ResourceManager.GetString("VisionText4", resourceCulture);
             }
         }
         

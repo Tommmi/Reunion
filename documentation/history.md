@@ -1,3 +1,8 @@
+# version 1.0.1.2 17.11.2016
+- comments in code
+- "more about Reunion"
+- legal information
+- Web.config
 # version 1.0.1.1 13.11.2016
 - component tests added
 - impressum added

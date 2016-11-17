@@ -215,7 +215,7 @@ namespace Reunion.Common
 		IEnumerable<ReunionEntity> GetReunionsOfUser(string userId);
 
 		/// <summary>
-		/// 
+		/// time ranges of organizer
 		/// </summary>
 		/// <param name="reunionId"></param>
 		/// <returns></returns>

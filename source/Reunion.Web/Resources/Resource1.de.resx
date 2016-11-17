@@ -700,7 +700,7 @@ ist nicht erforderlich.</value>
     <value>Wollen Sie wirklich die Seite verlassen ohne zu speichern ?</value>
   </data>
   <data name="ErrPossibleDatesMissing" xml:space="preserve">
-    <value>Markiere bitte im Kalendar die möglichen Zeiträume, zu denen Du zum Treffen erscheinen kannst.</value>
+    <value>Markiere bitte im Kalender die möglichen Zeiträume, zu denen Du zum Treffen erscheinen kannst.</value>
   </data>
   <data name="InvitationRejected" xml:space="preserve">
     <value>Du hast abgesagt</value>
@@ -777,5 +777,31 @@ Bitte folgende Tage prüfen und nachtragen: {0}</value>
   </data>
   <data name="HaftpflichtversicherungDetails" xml:space="preserve">
     <value>In- und Ausland, ausschließlich USA und USA-Territorien</value>
+  </data>
+  <data name="MenuItemMyReunionsTitel" xml:space="preserve">
+    <value>Meine Treffen</value>
+  </data>
+  <data name="VisionText1" xml:space="preserve">
+    <value>Reunion ist ein Webservice, mit dem viele Teilnehmer eines Treffens gemeinsam einen Tag für das Treffen aushandeln können.
+Die Teilnehmer werden vom Service automatisch über Email kontaktiert und füllen ihre persönlichen Präferenzen bzgl.
+des Treffens in einem persönlichen Kalender ein:</value>
+  </data>
+  <data name="VisionText2" xml:space="preserve">
+    <value>Die Teilnehmer können jederzeit nachträglich ihren Kalender aktualisieren, sogar nachdem ein abschließender Termin schon feststeht.</value>
+  </data>
+  <data name="VisionText3" xml:space="preserve">
+    <value>Der Organisator wird vom Service per Email informiert, wenn</value>
+  </data>
+  <data name="VisionText4" xml:space="preserve">
+    <value>&lt;li&gt;für alle Teilnehmer, deren Teilnahme erforderlich ist, ein möglicher Termin vorliegt.&lt;/li&gt;
+&lt;li&gt;ein Teilnehmer nicht reagiert&lt;/li&gt;
+&lt;li&gt;alle Teilnehmer abschließend zugesagt haben&lt;/li&gt;
+&lt;li&gt;das als Deadline eingetragene Datum erreicht wurde und noch kein Termin gefunden werden konnte&lt;/li&gt;</value>
+  </data>
+  <data name="MoreAboutReunionTitle" xml:space="preserve">
+    <value>Tutorial</value>
+  </data>
+  <data name="GerlachIt" xml:space="preserve">
+    <value>Gerlach und Sanabria Partnerschaft, Softwareingenieure</value>
   </data>
 </root>

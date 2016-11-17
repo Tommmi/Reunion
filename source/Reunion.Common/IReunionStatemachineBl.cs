@@ -73,7 +73,20 @@ namespace Reunion.Common
 		/// <param name="reunionId"></param>
 		void WakeOrganizer(int reunionId);
 
+		/// <summary>
+		/// true, if given participant hasn't set any information regarding the most possible dates of reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="participantId"></param>
+		/// <returns></returns>
 		bool MissingDaysOfParticipant(int reunionId, int participantId);
+
+		/// <summary>
+		/// Sends email to given participant informing about that participant hasn't set any information 
+		/// regarding the most possible dates of reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="participantId"></param>
 		void SendMissingDaysNotification(int reunionId, int participantId);
 	}
 }

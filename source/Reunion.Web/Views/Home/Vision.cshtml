@@ -1,14 +1,38 @@
 ﻿@using Reunion.Web.Resources
 @using Reunion.Web.Models
 @{
-    ViewBag.LayoutVM = new LayoutViewModel(title:Resource1.ReunionTitle);
+    ViewBag.LayoutVM = new LayoutViewModel(title: Resource1.MoreAboutReunionTitle);
 }
 @section body
 {
-    <div>
-        
+    <div class="row">
+        <div class="col-sm-7">
+            <p>
+                @Resource1.VisionText1
+            </p>
+        </div>
     </div>
-    <h2></h2>
-    
+    <div class="row">
+        <div class="col-sm-7">
+            <img id="CalendarParticipant1" class="img-responsive img-thumbnail screenshot" alt="screenshot calendar" src="/Content/images/CalendarParticipant1.png" />
+        </div>
+    </div>
+<div class="row">
+    <div class="col-sm-7">
+        <p>
+            @Resource1.VisionText2
+        </p>
+        <p>
+            @Resource1.VisionText3
+        </p>
+        <ul>
+            @(Html.Raw(Resource1.VisionText4))
+        </ul>
+    </div>
+</div>
+
+
+
+
 }
 

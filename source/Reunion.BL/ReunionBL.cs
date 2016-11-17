@@ -71,6 +71,9 @@ namespace Reunion.BL
 			public OrganizerStatemachine OrganizerStatemachine { get; }
 			public KnockStatemachine KnockStatemachine { get; }
 
+			/// <summary>
+			/// the date ranges, which have been selected by organizer for the reunion
+			/// </summary>
 			public IEnumerable<TimeRange> PossibleDatesOfOrganizer { get; }
 
 			/// <summary>
@@ -89,25 +92,29 @@ namespace Reunion.BL
 		/// map: two letter iso language code -> CultureInfo
 		/// </summary>
 		private static readonly Dictionary<string, CultureInfo> _cultureCache = new Dictionary<string, CultureInfo>();
-		private static object _sync = new object();
+
 		private readonly IReunionDal _dal;
 		private readonly IEmailSender _emailSender;
 		private readonly string _mailAddressOfReunion;
+		/// <summary>
+		/// minimum count of seconds the service is waiting for a reaction of a player
+		/// </summary>
 		private readonly int _minimumWaitTimeSeconds;
 		private readonly IBlResource _resource;
 		private ReunionContext _reunionContext;
 
 		/// <summary>
-		/// http://findtime.de/participant/ShowMyCalendar/{0}
+		/// e.g.: "https://findtime.de/participant/ShowMyCalendar/{0}"
 		/// {0}: URL encoded unguessable id of participant
 		/// </summary>
 		private readonly string _startPage4Participant;
 		/// <summary>
 		/// URI to status page of reunion {0}: reunion id
-		/// http://findtime.de/reunion/status/{0}
+		/// "https://findtime.de/reunion/status/{0}"
 		/// </summary>
 		private readonly string _statusPageOfReunion;
 
+		private static object _sync = new object();
 		private readonly ISystemTimeProvider _systemTimeProvider;
 		private readonly ITransactionService _transactionService;
 
@@ -123,7 +130,9 @@ namespace Reunion.BL
 		/// <param name="dal"></param>
 		/// <param name="emailSender"></param>
 		/// <param name="resource"></param>
-		/// <param name="minimumWaitTimeSeconds"></param>
+		/// <param name="minimumWaitTimeSeconds">
+		/// minimum count of seconds the service is waiting for a reaction of a player
+		/// </param>
 		/// <param name="startPage4Participant">
 		/// http://findtime.de/participant/{0}
 		/// {0}: unguessable id of participant
@@ -161,6 +170,11 @@ namespace Reunion.BL
 
 		#region private
 
+		/// <summary>
+		/// e.g.: https://findtime.de/Participant/Edit/JuZjOZgZC0GtnwssOiG8gQTxo0Tw
+		/// </summary>
+		/// <param name="participant"></param>
+		/// <returns></returns>
 		private string CreateParticipantDirektLink(Participant participant)
 		{
 			return string.Format(_startPage4Participant, participant.UnguessableId);
@@ -168,7 +182,7 @@ namespace Reunion.BL
 
 		/// <summary>
 		/// randomized string id
-		/// Requirement: must be URI encoded
+		/// (URI-able)
 		/// </summary>
 		/// <returns></returns>
 		private string CreateUnguessableId()
@@ -181,6 +195,12 @@ namespace Reunion.BL
 				.Replace('/', '_');
 		}
 
+		/// <summary>
+		/// map: possible date -> instance of DateProposal.
+		/// All instances of DateProposal will be initialized with the information, that no participant has specified anything regarding to that day.
+		/// </summary>
+		/// <param name="reunionContext"></param>
+		/// <returns></returns>
 		private static IDictionary<DateTime, DateProposal> CreateNewDateProposals(ReunionContext reunionContext)
 		{
 			IEnumerable<TimeRange> organizersTimeRanges = reunionContext.PossibleDatesOfOrganizer;
@@ -191,6 +211,11 @@ namespace Reunion.BL
 				.ToDictionary(date => date, date => new DateProposal(date) {DontKnowParticipantIds = participantIds.ToList()});
 		}
 
+		/// <summary>
+		/// performance optimized creation of CultureInfo for a given language iso code
+		/// </summary>
+		/// <param name="isoCode"></param>
+		/// <returns></returns>
 		private static CultureInfo GetCulture(string isoCode)
 		{
 			CultureInfo cultureInfo;
@@ -219,6 +244,11 @@ namespace Reunion.BL
 			return dates;
 		}
 
+		/// <summary>
+		/// map: participant id -> list of dates, for which participant hasn't given any information
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <returns></returns>
 		private Dictionary<int, IList<DateTime>> GetMissingDayInformations(int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId: reunionId, organizerId: null, forceReload: false);
@@ -250,6 +280,11 @@ namespace Reunion.BL
 			return missingDayInformations;
 		}
 
+		/// <summary>
+		/// All participants who haven't been invited yet.
+		/// </summary>
+		/// <param name="reunionContext"></param>
+		/// <returns></returns>
 		private static List<Participant> GetParticipantsToInvite(ReunionContext reunionContext)
 		{
 			return reunionContext.Participants.Where(p =>
@@ -259,6 +294,11 @@ namespace Reunion.BL
 			}).ToList();
 		}
 
+		/// <summary>
+		/// all ids of particpant who refused invitation at all
+		/// </summary>
+		/// <param name="reunionContext"></param>
+		/// <returns></returns>
 		private static List<int> GetRefusingParticipantIds(ReunionContext reunionContext)
 		{
 			return reunionContext.ParticipantStatemachines.Values
@@ -267,6 +307,18 @@ namespace Reunion.BL
 				.ToList();
 		}
 
+		/// <summary>
+		/// Loads all reunion data from database into cache except TimeRanges of participants.
+		/// Note ! If this method has been called allready since last creation of this instance
+		/// and forceReload==false, it will return the cached instance.
+		/// Note! ReunionBl will be recreated on every request. See UnityConfig.cs
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId"></param>
+		/// <param name="forceReload">
+		/// if true, the method will recreate ReunionContext from scratch.
+		/// </param>
+		/// <returns></returns>
 		private ReunionContext LoadReunion(int reunionId, int? organizerId, bool forceReload = false)
 		{
 			if (forceReload
@@ -303,6 +355,10 @@ namespace Reunion.BL
 			return _reunionContext;
 		}
 
+		/// <summary>
+		/// sends invitation mail to all participants who haven't got a primer invitation mail yet.
+		/// </summary>
+		/// <param name="reunionContext"></param>
 		private void SendInvitationMailsToParticipants(ReunionContext reunionContext)
 		{
 			var participantsToInvite = GetParticipantsToInvite(reunionContext);
@@ -312,6 +368,11 @@ namespace Reunion.BL
 			}
 		}
 
+		/// <summary>
+		/// sends primer invitation mail to given participant.
+		/// </summary>
+		/// <param name="reunionContext"></param>
+		/// <param name="participant"></param>
 		private void SendInvitationMailToParticipant(ReunionContext reunionContext, Participant participant)
 		{
 			string link = CreateParticipantDirektLink(participant);
@@ -374,17 +435,25 @@ namespace Reunion.BL
 			}
 		}
 
+		/// <summary>
+		/// Modifies the given parameter "dateProposal":
+		/// Says that given participant has agrees to the given date.
+		/// </summary>
+		/// <param name="dateProposal"></param>
+		/// <param name="participantId"></param>
+		/// <param name="nameOfParticipant"></param>
+		/// <param name="isRequiredParticipant"></param>
 		private static void UpdateDateProposalByAcceptingParticipant(
 			DateProposal dateProposal,
 			int participantId,
-			TimeRange timeRange,
+			string nameOfParticipant,
 			bool isRequiredParticipant)
 		{
 			dateProposal.AcceptingParticipantIds.Add(participantId);
 			dateProposal.DontKnowParticipantIds.Remove(participantId);
 			if (!dateProposal.AcceptingParticipants.IsEmpty())
 				dateProposal.AcceptingParticipants += ", ";
-			dateProposal.AcceptingParticipants += timeRange.Player.Name;
+			dateProposal.AcceptingParticipants += nameOfParticipant;
 			if (isRequiredParticipant)
 				dateProposal.CountAcceptingRequired++;
 		}
@@ -419,6 +488,13 @@ namespace Reunion.BL
 
 		#region IReunionStatemachineBL
 
+		/// <summary>
+		/// Triggers signal "SignalFinalDateRejected" to the participant's statemachine,
+		/// if participant hasn't marked final invitation date as ok.
+		/// If there isn't a final invitation this method doese nothing.
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="participantId"></param>
 		void IReunionStatemachineBL.CheckFinalDateRejected(int reunionId, int participantId)
 		{
 			var bl = this as IReunionBL;
@@ -438,6 +514,10 @@ namespace Reunion.BL
 			}
 		}
 
+		/// <summary>
+		/// clears the final invitation date of the reunion (sets it to null)
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionStatemachineBL.ClearFinalInvitationDate(int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
@@ -447,16 +527,31 @@ namespace Reunion.BL
 			reunionContext.Reunion.FinalInvitationDate = null;
 		}
 
+		/// <summary>
+		/// Deactivates statemachines of a reunion
+		/// (Sets StatemachineContext.IsTerminated = true)
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionStatemachineBL.DeactivateStatemachines(int reunionId)
 		{
 			_dal.DeactivateStatemachines(reunionId);
 		}
 
+		/// <summary>
+		/// Reactivates statemachines of a reunion after having deactivated them by calling DeactivateStatemachines
+		/// (Sets StatemachineContext.IsTerminated = false)
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionStatemachineBL.ReactivateStatemachines(int reunionId)
 		{
 			_dal.ReactivateStatemachines(reunionId);
 		}
 
+		/// <summary>
+		/// Checks if we must send signal "SignalDateFound" or "SignalRequiredRejected" to 
+		/// organizer's statemachine.
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionStatemachineBL.RecheckDateFound(int reunionId)
 		{
 			var bl = this as IReunionBL;
@@ -490,6 +585,10 @@ namespace Reunion.BL
 			}
 		}
 
+		/// <summary>
+		/// sends notification mail to organizer
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionStatemachineBL.SendKnockMail2Organizer(int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
@@ -508,12 +607,21 @@ namespace Reunion.BL
 				receipients: new[] {reunionContext.Organizer.MailAddress});
 		}
 
+		/// <summary>
+		/// Sends first invitation mails with personal links to participants, who aren't invitated yet.
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionStatemachineBL.SendPrimaryInvitationMails(int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
 			SendInvitationMailsToParticipants(reunionContext);
 		}
 
+		/// <summary>
+		/// sends mail to given participant informing about the cancellation of former final invitation.
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="participantId"></param>
 		void IReunionStatemachineBL.SendRejectionMailToParticipant(int reunionId, int participantId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
@@ -535,6 +643,10 @@ namespace Reunion.BL
 				receipients: new[] { participant.MailAddress });
 		}
 
+		/// <summary>
+		/// Triggers signal "SignalFinalInvitationCanceledByOrganizer" to all participant statemachines
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionStatemachineBL.TriggerSignalFinalInvitationCanceled(int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
@@ -544,12 +656,22 @@ namespace Reunion.BL
 				participantStatemachine.Value.Trigger(new ParticipantStatemachine.SignalFinalInvitationCanceledByOrganizer());
 		}
 
+		/// <summary>
+		/// Triggers signal "SignalKnock" to knockstatemachine of organizer
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionStatemachineBL.WakeOrganizer(int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
 			reunionContext?.KnockStatemachine.Trigger(new KnockStatemachine.SignalKnock());
 		}
 
+		/// <summary>
+		/// true, if given participant hasn't set any information regarding the most possible dates of reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="participantId"></param>
+		/// <returns></returns>
 		bool IReunionStatemachineBL.MissingDaysOfParticipant(int reunionId, int participantId)
 		{
 			var missingDayInformations = GetMissingDayInformations(reunionId);
@@ -558,6 +680,12 @@ namespace Reunion.BL
 			return missingDayInformations.ContainsKey(participantId);
 		}
 
+		/// <summary>
+		/// Sends email to given participant informing about that participant hasn't set any information 
+		/// regarding the most possible dates of reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="participantId"></param>
 		void IReunionStatemachineBL.SendMissingDaysNotification(int reunionId, int participantId)
 		{
 			var missingDayInformations = GetMissingDayInformations(reunionId);
@@ -595,6 +723,11 @@ namespace Reunion.BL
 
 		#region IReunionBL
 
+		/// <summary>
+		/// Must be called when a participant accepts a final invitation
+		/// </summary>
+		/// <param name="participantId"></param>
+		/// <param name="reunionId"></param>
 		void IReunionBL.AcceptFinalDate(int participantId, int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
@@ -622,6 +755,39 @@ namespace Reunion.BL
 				reunionContext.OrganizerStatemachine.Trigger(new OrganizerStatemachine.SignalParticipantsAccepted());
 		}
 
+		/// <summary>
+		/// Creates 
+		///		- new reunion in database.
+		/// 	- organizer and participants.
+		/// 	- statemachines of organizer.
+		/// 	- possible date ranges of organizer.
+		/// 	- statemachines of participants.
+		/// </summary>
+		/// <param name="reunion">
+		/// Following members of reunion will be ignored and needn't to be filled:
+		/// - Id
+		/// - DeactivatedParticipants
+		/// - FinalInvitationDate
+		/// </param>
+		/// <param name="organizer">
+		/// Following members of Organizer will be ignored and needn't to be filled:
+		/// - Id
+		/// - Reunion
+		/// </param>
+		/// <param name="participants">
+		/// Following members of Participant will be ignored and needn't to be filled:
+		/// - Id
+		/// - Reunion
+		/// - UnguessableId
+		/// </param>
+		/// <param name="possibleDateRanges">
+		/// Date ranges of organizer.
+		/// Following members needn't to be filled  and will be ignored:
+		/// - Id
+		/// - Player
+		/// - Reunion
+		/// </param>
+		/// <returns></returns>
 		ReunionCreateResult IReunionBL.CreateReunion(
 			ReunionEntity reunion,
 			Organizer organizer,
@@ -634,21 +800,55 @@ namespace Reunion.BL
 			return _dal.CreateReunion(reunion, organizer, participants, possibleDateRanges);
 		}
 
+		/// <summary>
+		/// deletes the given reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId">
+		/// The id of the organizer (Organizer.Id)
+		/// (must be set to authenticate the caller)
+		/// </param>
 		void IReunionBL.DeleteReunion(int reunionId, int organizerId)
 		{
 			_dal.DeleteReunion(reunionId: reunionId, organizerId: organizerId);
 		}
 
+		/// <summary>
+		/// all transactions called in "action" will use the same DbContext object if possible.
+		/// May be nested
+		/// </summary>
+		/// <param name="action">
+		/// 
+		/// </param>
 		void IReunionBL.DoWithSameDbContext(Action action)
 		{
 			_dal.DoWithSameDbContext(action);
 		}
 
+		/// <summary>
+		/// all transactions called in "action" will use the same DbContext object if possible.
+		/// May be nested
+		/// </summary>
+		/// <param name="action">
+		/// 
+		/// </param>
 		T IReunionBL.DoWithSameDbContext<T>(Func<T> action)
 		{
 			return _dal.DoWithSameDbContext(action);
 		}
 
+		/// <summary>
+		/// Sets the date on which the reunion should take place now.
+		/// Results in sending invitation mails and much more.
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId">
+		/// The id of the organizer (Organizer.Id)
+		/// (must be set to authenticate the caller)
+		/// </param>
+		/// <param name="date">
+		/// the date which is chossed for the final reunion
+		/// </param>
 		void IReunionBL.FinallyInvite(int reunionId, int organizerId, DateTime date)
 		{
 			var cultureInfoOrganizer = Thread.CurrentThread.CurrentCulture;
@@ -696,6 +896,16 @@ namespace Reunion.BL
 			_reunionContext.OrganizerStatemachine.Trigger(new OrganizerStatemachine.SignalFinalInvitationSent());
 		}
 
+		/// <summary>
+		/// Gets the planning information for each day, sorted by recommendation (best days on top)
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId">
+		/// The id of the organizer (Organizer.Id)
+		/// (must be set to authenticate the caller)
+		/// May be null.
+		/// </param>
+		/// <returns>date proposals</returns>
 		IEnumerable<DateProposal> IReunionBL.GetDateProposals(int reunionId, int? organizerId)
 		{
 			ReunionContext reunionContext;
@@ -746,11 +956,11 @@ namespace Reunion.BL
 										dateProposal.CountRefusingRequired++;
 									break;
 								case PreferenceEnum.PerfectDay:
-									UpdateDateProposalByAcceptingParticipant(dateProposal, participantId, timeRange, isRequiredParticipant);
+									UpdateDateProposalByAcceptingParticipant(dateProposal, participantId, timeRange.Player.Name, isRequiredParticipant);
 									dateProposal.CountPerfectDay++;
 									break;
 								case PreferenceEnum.Yes:
-									UpdateDateProposalByAcceptingParticipant(dateProposal, participantId, timeRange, isRequiredParticipant);
+									UpdateDateProposalByAcceptingParticipant(dateProposal, participantId, timeRange.Player.Name, isRequiredParticipant);
 									break;
 								case PreferenceEnum.MayBe:
 									// may not be choosable by organizer
@@ -782,6 +992,18 @@ namespace Reunion.BL
 			});
 		}
 
+		/// <summary>
+		/// Gets the mail content of the first overall invitation mail, which is to be sent from
+		/// organizer to all participants manually.
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId">
+		/// The id of the organizer (Organizer.Id)
+		/// (must be set to authenticate the caller)
+		/// </param>
+		/// <returns>
+		/// null, if all participants have got invitation mails allready or if reunion id is invalid
+		/// </returns>
 		InvitationMailContent IReunionBL.GetInvitationMailContent(int reunionId,int organizerId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: organizerId);
@@ -810,6 +1032,14 @@ namespace Reunion.BL
 			return null;
 		}
 
+		/// <summary>
+		/// Gets organizer by id of current user and reunion id
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="userId">
+		/// user id (Organizer.UserId)
+		/// </param>
+		/// <returns></returns>
 		public Organizer GetOrganizer(int reunionId, string userId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
@@ -822,29 +1052,74 @@ namespace Reunion.BL
 			return organizer;
 		}
 
+		/// <summary>
+		/// Get participants and their status for a given reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId">
+		/// The id of the organizer (Organizer.Id)
+		/// (must be set to authenticate the caller)
+		/// </param>
+		/// <returns></returns>
 		IEnumerable<Tuple<Participant, ParticipantStatusEnum>> IReunionBL.GetParticipants(int reunionId, int organizerId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId);
 			return reunionContext?.Participants.Select(p => new Tuple<Participant, ParticipantStatusEnum>(p, reunionContext.ParticipantStatemachines[p.Id].StateMachineEntity.CurrentState)).ToList();
 		}
 
+		/// <summary>
+		/// Gets all reunions created by the given user.
+		/// </summary>
+		/// <param name="userId">
+		/// user id (Organizer.UserId)
+		/// </param>
+		/// <returns></returns>
 		IEnumerable<ReunionEntity> IReunionBL.GetReunionsOfUser(string userId)
 		{
 			return _dal.GetReunionsOfUser(userId);
 		}
 
+		/// <summary>
+		/// Gets reunion status 
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <returns>null, if reunion couldn't be found</returns>
 		OrganizatorStatusEnum? IReunionBL.GetReunionStatus(int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
 			return reunionContext?.OrganizerStatemachine.StateMachineEntity.CurrentState;
 		}
 
+		/// <summary>
+		/// time ranges of organizer
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <returns></returns>
 		IEnumerable<TimeRange> IReunionBL.GetTimeRangesOfReunion(int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
 			return reunionContext?.PossibleDatesOfOrganizer;
 		}
 
+		/// <summary>
+		/// Gets date ranges of the given participant
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="participantId"></param>
+		/// <param name="finalInvitationdate">
+		/// OUT: final date of reuion, if set allready, otherwise null
+		/// </param>
+		/// <param name="hasAcceptedFinalInvitationdate">
+		/// OUT: true, if participant has accepted a given final invitation
+		/// OUT: false, if participant has rejected a given final invitation
+		/// OUT: null, if participant hasn't accepted nor rejected a given final invitation
+		/// </param>
+		/// <param name="daysToBeChecked">
+		/// days, which has to be checked by participant. 
+		/// Normally these days are the most possible dates for the event.
+		/// May be null.
+		/// </param>
+		/// <returns></returns>
 		IEnumerable<TimeRange> IReunionBL.GetTimeRangesOfParticipant(
 			int reunionId, 
 			int participantId, 
@@ -882,6 +1157,11 @@ namespace Reunion.BL
 			return timeRanges;
 		}
 
+		/// <summary>
+		/// Gets participant by unguessable id of the participant.
+		/// </summary>
+		/// <param name="unguessableParticipantId"></param>
+		/// <returns>null, if not found</returns>
 		Participant IReunionBL.GetVerifiedParticipant(string unguessableParticipantId)
 		{
 			int reunionId = _dal.FindReunionIdOfParticipant(unguessableParticipantId);
@@ -903,6 +1183,14 @@ namespace Reunion.BL
 			return null;
 		}
 
+		/// <summary>
+		/// If participant has been finally invited, this call marks the invitation date 
+		/// as not possible for the participant.
+		/// If the participant is required, this will result to a lot of actions and mails.
+		/// If the participant hasn't been finally invited, nothing will happen.
+		/// </summary>
+		/// <param name="participantId"></param>
+		/// <param name="reunionId"></param>
 		void IReunionBL.RejectFinalDateOnly(int participantId, int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
@@ -914,6 +1202,12 @@ namespace Reunion.BL
 			SetDatePreference(participantId, finalInvitationDate.Value, reunionContext, PreferenceEnum.NoWay);
 		}
 
+		/// <summary>
+		/// Removes participant from database.
+		/// Saves his name in the list of participants, who  have totally rejected invitation.
+		/// </summary>
+		/// <param name="participantId"></param>
+		/// <param name="reunionId"></param>
 		void IReunionBL.RejectCompletely(int participantId, int reunionId)
 		{
 			var reunionContext = LoadReunion(reunionId, organizerId: null);
@@ -925,6 +1219,17 @@ namespace Reunion.BL
 			(this as IReunionStatemachineBL).RecheckDateFound(reunionId);
 		}
 
+		/// <summary>
+		/// starts or resume reunion planning
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId">
+		/// The id of the organizer (Organizer.Id)
+		/// (must be set to authenticate the caller)
+		/// </param>
+		/// <returns>
+		/// null, if there is no reunion with given id
+		/// </returns>
 		ReunionEntity IReunionBL.StartReunion(int reunionId, int organizerId)
 		{
 			return _transactionService.DoInTransaction(() =>
@@ -938,6 +1243,12 @@ namespace Reunion.BL
 			});
 		}
 
+		/// <summary>
+		/// Loads all active statemachines (StatemachineContext.IsTerminated == false) and calls 
+		/// IStateMachine.Touch().
+		/// This method must be called time by time to ensure that actions take place when some time markers elapse.
+		/// This method may result in notification mails to participants and organizers !
+		/// </summary>
 		void IReunionBL.TouchAllReunions()
 		{
 			var statemachineEntities = _dal.GetAllRunningStatemachines();
@@ -960,6 +1271,30 @@ namespace Reunion.BL
 			}
 		}
 
+		/// <summary>
+		/// Updates reunion.
+		/// </summary>
+		/// <param name="reunion">
+		/// Following members needn't to be filled and will be ignored:
+		/// - DeactivatedParticipants
+		/// - FinalInvitationDate
+		/// </param>
+		/// <param name="verifiedOrganizerId">
+		/// the id of the organizer
+		/// </param>
+		/// <param name="participants">
+		/// Following members needn't to be filled and will be ignored:
+		/// - Id: must be 0 if it's new !
+		/// - Reunion
+		/// - UnguessableId
+		/// </param>
+		/// <param name="possibleDateRanges">
+		/// Date ranges of organizer.
+		/// Following members needn't to be filled  and will be ignored:
+		/// - Player
+		/// - Reunion
+		/// - Id:  must be 0, if it's new !
+		/// </param>
 		ReunionUpdateResult IReunionBL.UpdateReunion(ReunionEntity reunion, int verifiedOrganizerId, IEnumerable<Participant> participants, IEnumerable<TimeRange> possibleDateRanges)
 		{
 			// ReSharper disable once PossibleMultipleEnumeration
@@ -978,6 +1313,18 @@ namespace Reunion.BL
 			return res;
 		}
 
+		///  <summary>
+		///  Replaces the time ranges of the given participant by the given enumeration.
+		///  </summary>
+		///  <param name="timeRanges">
+		///  you needn't fill in
+		/// 		TimeRange.Id
+		/// 		TimeRange.Player
+		/// 		TimeRange.Reunion
+		///  </param>
+		/// <param name="unguessableIdOfParticipant">
+		/// authentication id of participant
+		/// </param>
 		void IReunionBL.UpdateTimeRangesOfParticipant(IEnumerable<TimeRange> timeRanges, string unguessableIdOfParticipant)
 		{
 			var reunionId = _dal.UpdateTimeRangesOfParticipant(timeRanges, unguessableIdOfParticipant);

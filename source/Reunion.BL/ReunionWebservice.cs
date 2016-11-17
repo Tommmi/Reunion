@@ -5,8 +5,15 @@ using TUtils.Common;
 
 namespace Reunion.BL
 {
+	/// <summary>
+	/// implements IReunionWebservice
+	/// all REST functions, grouped by resources
+	/// </summary>
 	public class ReunionWebservice : IReunionWebservice
 	{
+		/// <summary>
+		/// REST function Touch
+		/// </summary>
 		private class Touch : ITouch
 		{
 			private readonly IReunionDal _dal;

@@ -6,8 +6,10 @@ namespace Reunion.Common
 	/// <summary>
 	/// All planning information for a single date:
 	/// - day
+	/// - who agreed to come
 	/// - who may come
 	/// - who won't come
+	/// - who hasn't specified anything relating the given date
 	/// - how many required participants may come
 	/// - how many required participants won't come
 	/// </summary>
@@ -18,7 +20,7 @@ namespace Reunion.Common
 		/// </summary>
 		public DateTime Date { get; set; }
 		/// <summary>
-		/// all participant ids of those who may come
+		/// all participant ids of those who have time on that day
 		/// </summary>
 		public IList<int> AcceptingParticipantIds { get; private set; } =  new List<int>();
 		/// <summary>
@@ -26,7 +28,7 @@ namespace Reunion.Common
 		/// </summary>
 		public IList<int> RefusingParticipantIds { get; private set; } = new List<int>();
 		/// <summary>
-		/// all participant ids of those who don't know it yet
+		/// all participant ids of those who may come on that date
 		/// </summary>
 		public IList<int> MayBeParticipantIds { get; private set; } = new List<int>();
 		/// <summary>

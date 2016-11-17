@@ -3,7 +3,7 @@
 namespace Reunion.DAL
 {
 	/// <summary>
-	/// 
+	/// database migration configuration
 	/// </summary>
 	internal sealed class ReunionDbConfiguration : DbMigrationsConfiguration<ReunionDbContext>
 	{

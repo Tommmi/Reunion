@@ -4,10 +4,14 @@ using Reunion.Common.Model.States;
 
 namespace Reunion.DAL
 {
+	/// <summary>
+	/// entity framework database context - productive version
+	/// </summary>
 	public class ReunionDbContext : DbContext, IReunionDbContext
 	{
 		public ReunionDbContext() : base("ReunionConnectionString")
 		{
+			// migrate automatically
 			Database.SetInitializer(new MigrateDatabaseToLatestVersion<ReunionDbContext, ReunionDbConfiguration>("ReunionConnectionString"));
 		}
 

@@ -8,6 +8,8 @@
 *@
 @using Reunion.Web.Resources
 @using System.Threading
+@using Reunion.Web.Controllers
+@using TUtils.Common.Extensions
 <!DOCTYPE html>
 <html ng-app="reunionApp">
 <head>
@@ -31,13 +33,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink(Resource1.ReunionTitle, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink(Resource1.ReunionTitle, nameof(HomeController.Index), nameof(HomeController).RemoveController(), new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink(Resource1.MenuItemHomeTitel, "Index", "Home")</li>
-                    <li>@Html.ActionLink(Resource1.MenuItemAboutTitel, "About", "Home")</li>
-                    <li>@Html.ActionLink(Resource1.MenuItemImpressumTitel, "Contact", "Home")</li>
+                    <li>@Html.ActionLink(Resource1.MenuItemMyReunionsTitel, nameof(ReunionController.Manage), nameof(ReunionController).RemoveController())</li>
+                    <li>@Html.ActionLink(Resource1.MenuItemImpressumTitel, nameof(HomeController.Contact), nameof(HomeController).RemoveController())</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -50,7 +51,7 @@
         @RenderSection("body", required: true)
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - @Resource1.ReunionTitle</p>
+            <p>&copy; @DateTime.Now.Year - @Resource1.GerlachIt</p>
         </footer>
     </div>
 

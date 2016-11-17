@@ -232,6 +232,38 @@ namespace Reunion.DAL
 
 		#region IReunionDal
 
+		/// <summary>
+		/// Creates 
+		///		- new reunion in database
+		/// 	- organizer and participants.
+		/// 	- statemachines of organizer.
+		/// 	- possible date ranges.
+		/// 	- statemachines of participants.
+		/// </summary>
+		/// <param name="reunion">
+		/// Following members of reunion will be ignored and needn't to be filled:
+		/// - Id
+		/// - DeactivatedParticipants
+		/// - FinalInvitationDate
+		/// </param>
+		/// <param name="organizer">
+		/// Following members of Organizer will be ignored and needn't to be filled:
+		/// - Id
+		/// - Reunion
+		/// </param>
+		/// <param name="participants">
+		/// Following members of Participant will be ignored and needn't to be filled:
+		/// - Id
+		/// - Reunion
+		/// </param>
+		/// <param name="possibleDateRanges">
+		/// Date ranges of organizer.
+		/// Following members needn't to be filled  and will be ignored:
+		/// - Id
+		/// - Player
+		/// - Reunion
+		/// </param>
+		/// <returns></returns>
 		ReunionCreateResult IReunionDal.CreateReunion(
 			ReunionEntity reunion,
 			Organizer organizer,
@@ -301,29 +333,22 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// sets property StatemachineContext.IsTerminated=true of all statemachines of the given reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
 		void IReunionDal.DeactivateStatemachines(int reunionId)
 		{
 			SetTerminatedStatusOfStatemachines(reunionId, isTerminated: true);
 		}
 
-		void IReunionDal.RemoveParticipant(int reunionId, int participantId)
-		{
-			_transactionService.DoInTransaction(db =>
-			{
-				var participant = db.Participants.Find(participantId);
-				if ( participant == null )
-					return;
-				RemovePlayer(db, participant);
-				var reunion = db.Reunions.Find(reunionId);
-				if ( reunion == null )
-					return;
-				if (reunion.DeactivatedParticipants == null)
-					reunion.DeactivatedParticipants = string.Empty;
-				reunion.DeactivatedParticipants += $"{participant.Name} ";
-				db.SaveChanges();
-			});
-		}
-
+		/// <summary>
+		/// deletes reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId">
+		/// organizer's id: neccessary for authorization 
+		/// </param>
 		void IReunionDal.DeleteReunion(int reunionId, int organizerId)
 		{
 			_transactionService.DoInTransaction(db =>
@@ -358,17 +383,36 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// all transactions called in "action" will use the same DbContext object if possible.
+		/// May be nested
+		/// </summary>
+		/// <param name="action">
+		/// 
+		/// </param>
 		void IReunionDal.DoWithSameDbContext(Action action)
 		{
 			_transactionService.DoWithSameDbContext(action);
 		}
 
+		/// <summary>
+		/// all transactions called in "action" will use the same DbContext object if possible.
+		/// May be nested
+		/// </summary>
+		/// <param name="action">
+		/// 
+		/// </param>
 		T IReunionDal.DoWithSameDbContext<T>(Func<T> action)
 		{
 			return _transactionService.DoWithSameDbContext(action);
 		}
 
 
+		/// <summary>
+		/// returns the reunion id of the passed participant's unguessable id (Participant.UnguessableId)
+		/// </summary>
+		/// <param name="unguessableParticipantId"></param>
+		/// <returns>id of reunion</returns>
 		int IReunionDal.FindReunionIdOfParticipant(string unguessableParticipantId)
 		{
 			return _transactionService.DoInTransaction(db =>
@@ -380,6 +424,10 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// returns all active (StatemachineContext.IsTerminated==false) statemachines of all reunions
+		/// </summary>
+		/// <returns></returns>
 		IEnumerable<StatemachineContext> IReunionDal.GetAllRunningStatemachines()
 		{
 			return _transactionService.DoInTransaction(db =>
@@ -391,6 +439,11 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// returns all time ranges of the passed reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <returns></returns>
 		IEnumerable<TimeRange> IReunionDal.GetAllTimeRanges(int reunionId)
 		{
 			return _transactionService.DoInTransaction(db =>
@@ -402,6 +455,11 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// Gets all reunions of a logged-in user
+		/// </summary>
+		/// <param name="userId">id of a registered user</param>
+		/// <returns></returns>
 		IEnumerable<ReunionEntity> IReunionDal.GetReunionsOfUser(string userId)
 		{
 			return _transactionService.DoInTransaction(db => (
@@ -412,6 +470,14 @@ namespace Reunion.DAL
 				select r).ToList());
 		}
 
+		/// <summary>
+		/// gets time ranges of organizer
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="organizerId">
+		/// for authorization only
+		/// </param>
+		/// <returns>!= null allways. If organizer doesn't exist, the call returns an empty enumeration</returns>
 		IEnumerable<TimeRange> IReunionDal.GetTimeRangesOfOrganizer(int reunionId, int organizerId)
 		{
 			return _transactionService.DoInTransaction<IEnumerable<TimeRange>>(db =>
@@ -420,6 +486,11 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// gets time ranges of a given participant
+		/// </summary>
+		/// <param name="participantId"></param>
+		/// <returns></returns>
 		IEnumerable<TimeRange> IReunionDal.GetTimeRangesOfParticipant(int participantId)
 		{
 			return _transactionService.DoInTransaction<IEnumerable<TimeRange>>(db =>
@@ -428,6 +499,15 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// Loads 
+		///		- reunion
+		///		- organizer
+		///		- participants
+		///		- all statemachines
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <returns></returns>
 		ReunionInfo IReunionDal.LoadReunion(int reunionId)
 		{
 			return _transactionService.DoInTransaction(db =>
@@ -480,11 +560,43 @@ namespace Reunion.DAL
 			});
 		}
 
-		public void ReactivateStatemachines(int reunionId)
+		/// <summary>
+		/// Clears property StytemachineContext.IsTerminated = false of all statemachines of passed reunion
+		/// </summary>
+		/// <param name="reunionId"></param>
+		void IReunionDal.ReactivateStatemachines(int reunionId)
 		{
 			SetTerminatedStatusOfStatemachines(reunionId, isTerminated: false);
 		}
 
+		/// <summary>
+		/// Removes player from database and adds name of participant to string ReunionEntity.DeactivatedParticipants
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="participantId"></param>
+		void IReunionDal.RemoveParticipant(int reunionId, int participantId)
+		{
+			_transactionService.DoInTransaction(db =>
+			{
+				var participant = db.Participants.Find(participantId);
+				if ( participant == null )
+					return;
+				RemovePlayer(db, participant);
+				var reunion = db.Reunions.Find(reunionId);
+				if ( reunion == null )
+					return;
+				if (reunion.DeactivatedParticipants == null)
+					reunion.DeactivatedParticipants = string.Empty;
+				reunion.DeactivatedParticipants += $"{participant.Name} ";
+				db.SaveChanges();
+			});
+		}
+
+		/// <summary>
+		/// set the given invitation date (ReunonEntity.FinalInvitationDate)
+		/// </summary>
+		/// <param name="reunionId"></param>
+		/// <param name="finalInviationDate"></param>
 		void IReunionDal.SaveFinalInvitationDate(int reunionId, DateTime? finalInviationDate)
 		{
 			_transactionService.DoInTransaction(db =>
@@ -497,6 +609,31 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// Updates reunion.
+		/// </summary>
+		/// <param name="reunion">
+		/// Following members needn't to be filled and will be ignored:
+		/// - DeactivatedParticipants
+		/// - FinalInvitationDate
+		/// </param>
+		/// <param name="verifiedOrganizerId">
+		/// the id of the organizer
+		/// </param>
+		/// <param name="participants">
+		/// Following members needn't to be filled and will be ignored:
+		/// - Id: must be 0 if it's new !
+		/// - Reunion
+		/// - UnguessableId, if Id != 0
+		/// </param>
+		/// <param name="possibleDateRanges">
+		/// Date ranges of organizer.
+		/// Following members needn't to be filled  and will be ignored:
+		/// - Player
+		/// - Reunion
+		/// - Id:  must be 0, if it's new !
+		/// </param>
+		/// <returns></returns>
 		ReunionUpdateResult IReunionDal.UpdateReunion(
 			ReunionEntity reunion,
 			int verifiedOrganizerId,
@@ -570,6 +707,24 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// Saves changes to entity StatemachineContext.
+		/// If newState.IsDirty == false, the method doese nothing.
+		/// Saves all of the entity except
+		/// - Id
+		/// - IsDirty
+		/// - Player
+		/// - Reunion
+		/// </summary>
+		/// <param name="newState">
+		/// Following members needn't to be filled  and will be ignored:
+		/// - Player
+		/// - Reunion
+		/// </param>
+		/// <param name="oldState">
+		/// old state
+		/// Precondition: current state must be equal old state, otherwise methof won't execute and will return false.
+		/// </param>
 		bool IReunionDal.UpdateState(StatemachineContext newState, int oldState)
 		{
 			if (!newState.IsDirty)
@@ -594,6 +749,17 @@ namespace Reunion.DAL
 			});
 		}
 
+		///  <summary>
+		///  Replaces time ranges of participant
+		///  </summary>
+		///  <param name="timeRanges">
+		///  following members of TimeRange will be ignored and you needn't fill in:
+		/// 		TimeRange.Id
+		/// 		TimeRange.Player
+		/// 		TimeRange.Reunion
+		///  </param>
+		///  <param name="unguessableParticipantId"></param>
+		/// <returns>reunion id</returns>
 		int IReunionDal.UpdateTimeRangesOfParticipant(IEnumerable<TimeRange> timeRanges, string unguessableParticipantId)
 		{
 			return _transactionService.DoInTransaction(db =>
@@ -622,6 +788,10 @@ namespace Reunion.DAL
 
 		#region Touch
 
+		/// <summary>
+		/// returns touch task entity with the youngest creation time
+		/// </summary>
+		/// <returns></returns>
 		TouchTask IReunionDal.GetLatestTouchTask()
 		{
 			return _transactionService.DoInTransaction(db =>
@@ -630,11 +800,27 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// gets touch task with the given id
+		/// </summary>
+		/// <param name="touchTaskId"></param>
+		/// <returns></returns>
 		TouchTask IReunionDal.GetTouchTask(int touchTaskId)
 		{
 			return _transactionService.DoInTransaction(db => db.TouchTasks.Find(touchTaskId));
 		}
 
+		/// <summary>
+		/// Upserts touch task. This method is idempotent.
+		/// If touch task was found either by TouchTask.Id or TouchTask.CreationTimestamp,
+		/// the existing entity will be updated.
+		/// Ensures that amount of (old) touch task resources don't increase more and more in database.
+		/// Very old touch tasks will be deleted. 
+		/// </summary>
+		/// <param name="touchTask">
+		/// if touchTask.Id==0, the method will look by touchTask.CreationTimestamp for the existing entity.
+		/// </param>
+		/// <returns></returns>
 		TouchTask IReunionDal.PutTouchTask(TouchTask touchTask)
 		{
 			return _transactionService.DoInTransaction(db =>
@@ -665,6 +851,14 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// Creates and inserts a new touch task.
+		/// Ensures that amount of (old) touch task resources don't increase more and more in database.
+		/// Very old touch tasks will be deleted. 
+		/// </summary>
+		/// <returns>
+		/// the created touch task
+		/// </returns>
 		public TouchTask PostTouchTask()
 		{
 			return _transactionService.DoInTransaction(db =>
@@ -681,6 +875,14 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// Deletes the specified touch task. This method is idempotent.
+		/// This method deletes the task-resource for the touch process only.
+		/// It won't rollback any actions resulting from a former touch task.
+		/// </summary>
+		/// <param name="touchTaskId">
+		/// id of the touch task
+		/// </param>
 		void IReunionDal.DeleteTouchTask(int touchTaskId)
 		{
 			_transactionService.DoInTransaction(db =>
@@ -694,6 +896,10 @@ namespace Reunion.DAL
 			});
 		}
 
+		/// <summary>
+		/// sets flag TouchTask.Executed of the specified touch task
+		/// </summary>
+		/// <param name="touchTaskId"></param>
 		void IReunionDal.SetTouchTaskExecuted(int touchTaskId)
 		{
 			_transactionService.DoInTransaction(db =>

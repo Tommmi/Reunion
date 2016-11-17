@@ -4,6 +4,9 @@ using Reunion.Common.Model.States;
 
 namespace Reunion.DAL
 {
+	/// <summary>
+	/// entity framework database context
+	/// </summary>
 	public interface IReunionDbContext
 	{
 		DbSet<KnockStatemachineEntity> KnockStatemachines { get; set; }

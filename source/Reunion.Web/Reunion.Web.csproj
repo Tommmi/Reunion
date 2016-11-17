@@ -302,6 +302,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\50K.jpg" />
+    <Content Include="Content\images\CalendarParticipant1.png" />
     <Content Include="Content\images\Face-blush.svg" />
     <Content Include="Content\images\Face-crying.svg" />
     <Content Include="Content\images\Face-grin.svg" />

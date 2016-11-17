@@ -15,6 +15,9 @@ using Saltarelle.Utils;
 
 namespace Reunion.Scripts
 {
+	/// <summary>
+	/// participant controller
+	/// </summary>
 	[Reflectable, Inject("$scope","$cookies","$timeout")]
 	public class ParticipantController
 	{

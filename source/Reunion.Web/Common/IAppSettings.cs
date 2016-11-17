@@ -7,6 +7,9 @@ namespace Reunion.Web.Common
 {
 	public interface IAppSettings
 	{
+		/// <summary>
+		/// minimum count of hours the service is waiting for a reaction of a player
+		/// </summary>
 		int MaxReactionTimeHours { get; }
 		string ServiceHost { get; }
 		/// <summary>

@@ -9,6 +9,9 @@ using Saltarelle.Utils;
 
 namespace Reunion.Scripts
 {
+	/// <summary>
+	/// Angular controller for the multiselection calendar in Reunion
+	/// </summary>
 	[Reflectable, Inject("$scope")]
 	public class CalendarController
 	{

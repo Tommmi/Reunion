@@ -784,4 +784,31 @@ Please check and update the following days: {0}</value>
   <data name="HaftpflichtversicherungDetails" xml:space="preserve">
     <value>At home and abroad, excluding US and US territories</value>
   </data>
+  <data name="MenuItemMyReunionsTitel" xml:space="preserve">
+    <value>My reunions</value>
+  </data>
+  <data name="VisionText1" xml:space="preserve">
+    <value>Reunion is a webservice, with which many participants of a reunion can negotiate a day for the meeting.
+The participants are automatically contacted by the service via email and fill in their personal 
+preferences regarding the meeting in a personal calendar:</value>
+  </data>
+  <data name="VisionText2" xml:space="preserve">
+    <value>Participants can update their calendar at any time, 
+even after a final date has already been set.</value>
+  </data>
+  <data name="VisionText3" xml:space="preserve">
+    <value>The organizer will be informed by the service, when</value>
+  </data>
+  <data name="VisionText4" xml:space="preserve">
+    <value>&lt;li&gt;there is a possible date for all participants whose participation is required. &lt;/li&gt;
+&lt;li&gt;a participant does not respond &lt;/li&gt;
+&lt;li&gt;finally all participants have agreed&lt;/li&gt;
+&lt;li&gt;the date entered as the deadline was reached and no appointment could be found &lt;/li&gt;</value>
+  </data>
+  <data name="MoreAboutReunionTitle" xml:space="preserve">
+    <value>Tutorial</value>
+  </data>
+  <data name="GerlachIt" xml:space="preserve">
+    <value>Gerlach und Sanabria Partnerschaft, Softwareingenieure</value>
+  </data>
 </root>
