@@ -163,8 +163,8 @@ publish/
 
 #password filled web.config
 Web-azure.config
-#Web-local-development.config
-#Web-git.config
+Web-local-development.config
+Web-git.config
 prepare4*.bat
 
 # Microsoft Azure Build Output
