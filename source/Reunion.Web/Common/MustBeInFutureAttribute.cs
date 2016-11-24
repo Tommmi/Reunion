@@ -7,6 +7,9 @@ using Reunion.Web.Resources;
 
 namespace Reunion.Web.Common
 {
+	/// <summary>
+	/// the assigned property must be a DateTime and younger than current date
+	/// </summary>
 	public class MustBeInFutureAttribute : ValidationAttribute
 	{
 		protected override ValidationResult IsValid(object value, ValidationContext validationContext)

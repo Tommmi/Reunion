@@ -827,6 +827,15 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is a participant with the same mail address allready !.
+        /// </summary>
+        public static string EmailAddressAllreadyExists {
+            get {
+                return ResourceManager.GetString("EmailAddressAllreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
         public static string Enabled {
@@ -1470,6 +1479,15 @@ namespace Reunion.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string ParticipantName {
@@ -1927,6 +1945,15 @@ namespace Reunion.Web.Resources {
         public static string VisionText4 {
             get {
                 return ResourceManager.GetString("VisionText4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string Warning {
+            get {
+                return ResourceManager.GetString("Warning", resourceCulture);
             }
         }
         

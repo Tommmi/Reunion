@@ -804,4 +804,13 @@ des Treffens in einem persönlichen Kalender ein:</value>
   <data name="GerlachIt" xml:space="preserve">
     <value>Gerlach und Sanabria Partnerschaft, Softwareingenieure</value>
   </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+  <data name="EmailAddressAllreadyExists" xml:space="preserve">
+    <value>Es gibt schon einen Teilnehmer mit der gleichen Email-Adresse !</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
 </root>

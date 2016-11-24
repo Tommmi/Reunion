@@ -1,3 +1,6 @@
+# version 1.0.1.3 24.11.2016
+- warning if organizer wants to insert two participants with same mail address
+- comments added
 # version 1.0.1.2 17.11.2016
 - comments in code
 - "more about Reunion"

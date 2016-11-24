@@ -98,8 +98,6 @@ namespace Reunion.Web
 					mailAddressOfReunion: appSettings.MailAccount_MailAddress);
 			});
 
-			container.RegisterSingleton<ILanguagesService, LanguagesService>();
-
 			DependencyResolver.SetResolver(new Unity.Mvc5.UnityDependencyResolver(unityContainer));
 			GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(unityContainer);
 		}

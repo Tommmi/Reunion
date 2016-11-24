@@ -4,6 +4,8 @@
 *@
 @using System.Threading
 @using Reunion.Web.Resources
+@using Reunion.Web.Common
+
 @model string
 @{
     var participantsAsJson = Model;
@@ -50,7 +52,7 @@
             </div>
         </div>
     </div>
-    @*editable row, which contains input fields (moveable:absolute positioned)*@  
+    @*editable row, which contains input fields (moveable:absolute positioned)*@
     <div id="editable-row-pos">
         <div class="row nopadding" id="editable-row" mode="{{editMode}}">
             <div class="col-xs-10 nopadding">
@@ -72,8 +74,10 @@
                     </div>
                     <div class="col-xs-6 col-sm-3 lang">
                         <select class="form-control input-sm" ng-model="editrow.playerLanguageIsoCode">
-                            <option value="de">@Resource1.Language_DE</option>
-                            <option value="en">@Resource1.Language_EN</option>
+                            @foreach(var langIsoCode in AppSettings.SupportedTwoLetterLanguageIsoCodes)
+                            {
+                                <option value="@langIsoCode">@Resource1.ResourceManager.GetString($"Language_{langIsoCode.ToUpper()}")</option>
+                            }
                         </select>
                     </div>
                     <div class="col-xs-12 col-sm-7 contactPolicy">
@@ -89,7 +93,7 @@
                                     @Resource1.AddThisParticipant
                                 </a>
                             </div>
-                        </div>	                        
+                        </div>
                     </div>
                 </div>
             </div>
@@ -106,4 +110,21 @@
             </div>
         </div>
     </div>
+    <div id="mailAddressExistsAllreadyDlg" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Resource1.Warning</h4>
+                </div>
+                <div class="modal-body">
+                    <p>@Resource1.EmailAddressAllreadyExists</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@Resource1.Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+

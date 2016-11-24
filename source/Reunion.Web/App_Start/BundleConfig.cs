@@ -8,27 +8,6 @@ namespace Reunion.Web
 		// For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
 		public static void RegisterBundles(BundleCollection bundles)
 		{
-			//bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-			//			"~/Scripts/jquery-{version}.js"));
-
-			// Use the development version of Modernizr to develop with and learn from. Then, when you're
-			// ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-			//bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-			//			"~/Scripts/modernizr-*"));
-
-			//bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-			//		  "~/Scripts/bootstrap.min.js",
-			//		  "~/Scripts/respond.js"));
-
-			//bundles.Add(new ScriptBundle("~/bundles/saltarelle").Include(
-			//		  "~/Scripts/mscorlib.min.js",
-			//		  "~/Scripts/linq.min.js",
-			//		  "~/Scripts/saltarelle.angularjs.js",
-			//		  "~/Scripts/saltarelle.utils.min.js"));
-
-			//bundles.Add(new ScriptBundle("~/bundles/sitescript").Include(
-			//		  "~/Scripts/reunion.scripts.js"));
-
 #if NOT_MINIMIZED
 			bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
 						"~/Scripts/jquery.validate.js",
@@ -76,10 +55,6 @@ namespace Reunion.Web
 				"~/Scripts/saltarelle.utils.min.js",
 				"~/Scripts/reunion.scripts.js"));
 #endif
-
-
-
-
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
 					  "~/Content/multiselectioncalendar.css",

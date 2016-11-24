@@ -266,7 +266,6 @@
     <Compile Include="Common\AppSettings.cs" />
     <Compile Include="Common\BLResource.cs" />
     <Compile Include="Common\IAppSettings.cs" />
-    <Compile Include="Common\ILanguagesService.cs" />
     <Compile Include="Common\MustBeInFutureAttribute.cs" />
     <Compile Include="Controllers\ParticipantController.cs" />
     <Compile Include="Controllers\TouchController.cs" />
@@ -282,7 +281,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
-    <Compile Include="Services\LanguagesService.cs" />
     <Compile Include="Models\LanguageViewModel.cs" />
     <Compile Include="Services\IdentityManager.cs" />
     <Compile Include="Controllers\AccountController.cs" />

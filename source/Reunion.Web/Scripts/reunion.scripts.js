@@ -49,10 +49,10 @@
 	global.Reunion.Scripts.CalendarController$CalendarScope = $Reunion_Scripts_CalendarController$CalendarScope;
 	////////////////////////////////////////////////////////////////////////////////
 	// Reunion.Scripts.ParticipantController
-	var $Reunion_Scripts_ParticipantController = function(_scope, _cookies, _timeout) {
-		this.$_timeout = null;
+	var $Reunion_Scripts_ParticipantController = function(_scope, _cookies, timeoutService) {
+		this.$_timeoutService = null;
 		this.$_scope = null;
-		this.$_timeout = _timeout;
+		this.$_timeoutService = timeoutService;
 		var initialParticipantsAsJson = $('#ParticipantsAsJson').val();
 		var scope = this.$_scope = Saltarelle.Utils.Utils.enhance($Reunion_Scripts_ParticipantController$ParticipantsScope, AngularJS.Scope).call(null, _scope);
 		// see TUtils
@@ -149,24 +149,12 @@
 	ss.initClass($Reunion_Scripts_CalendarController, $asm, {});
 	ss.initClass($Reunion_Scripts_CalendarController$CalendarScope, $asm, {}, AngularJS.Scope);
 	ss.initClass($Reunion_Scripts_ParticipantController, $asm, {
-		$onSaveParticipant: function(event) {
-			if (this.$_scope.editMode === 1) {
-				var editedParticipant = new $Reunion_Scripts_ParticipantController$Participant(this.$_scope.editrow);
-				if (this.$isValid(editedParticipant)) {
-					this.$updateParticipant(this.$_scope.currentEditingRowIdx, editedParticipant);
-				}
-				this.$showLastEditedRow();
-				this.$_scope.editMode = 0;
-				this.$_scope.editrow.init$1(0, '', '', false, 1, this.$_scope.editrow.playerLanguageIsoCode);
-				this.$updateInputRowCoordinates();
-			}
-		},
 		$onDeleteParticipant: function(event, rowId) {
 			var id = $Reunion_Scripts_ParticipantController.$getRowIdxFromId(rowId);
 			ss.removeAt(this.$_scope.participants, id);
 			// update coordinates of input row
-			// Deferred because we must wait until DOM has been rebuild 
-			this.$_timeout(ss.mkdel(this, this.$updateInputRowCoordinates));
+			// Deferred because we must wait until DOM has been rebuilt
+			this.$_timeoutService(ss.mkdel(this, this.$updateInputRowCoordinates));
 		},
 		$onEditParticipant: function(event, rowId) {
 			var editedParticipant = new $Reunion_Scripts_ParticipantController$Participant(this.$_scope.editrow);
@@ -186,7 +174,47 @@
 			var rowIdx = this.$hideRow(rowId);
 			var participant = this.$_scope.participants[rowIdx];
 			this.$_scope.editrow.init(participant);
-			this.$_timeout(ss.mkdel(this, this.$updateInputRowCoordinates));
+			this.$_timeoutService(ss.mkdel(this, this.$updateInputRowCoordinates));
+		},
+		$onInsertParticipant: function(event) {
+			var newParticipant = new $Reunion_Scripts_ParticipantController$Participant(this.$_scope.editrow);
+			if (!this.$isValid(newParticipant)) {
+				return;
+			}
+			if (this.$existsParticipant(newParticipant)) {
+				// show warning "mail address allready exists !"
+				$('#mailAddressExistsAllreadyDlg').modal('show');
+				return;
+			}
+			if (this.$insertOrUpdateParticipant(newParticipant)) {
+				this.$_scope.editrow.clearNameAndEmail();
+			}
+		},
+		$onParticipantsCollectionChanged: function(newValue, oldValue) {
+			var json = JSON.stringify(Enumerable.from(newValue).select(function(p) {
+				return new $Reunion_Web_Models_ParticipantViewModel.$ctor1(p.id, p.name, p.mail, p.isRequired, p.contactPolicy, p.playerLanguageIsoCode);
+			}).toArray());
+			if (!ss.referenceEquals(json, this.$_scope.participantsAsJson)) {
+				this.$_scope.participantsAsJson = json;
+			}
+		},
+		$onSaveParticipant: function(event) {
+			if (this.$_scope.editMode === 1) {
+				var editedParticipant = new $Reunion_Scripts_ParticipantController$Participant(this.$_scope.editrow);
+				if (this.$isValid(editedParticipant)) {
+					this.$updateParticipant(this.$_scope.currentEditingRowIdx, editedParticipant);
+				}
+				this.$showLastEditedRow();
+				this.$_scope.editMode = 0;
+				this.$_scope.editrow.init$1(0, '', '', false, 1, this.$_scope.editrow.playerLanguageIsoCode);
+				this.$updateInputRowCoordinates();
+			}
+		},
+		$existsParticipant: function(newParticipant) {
+			var mail = newParticipant.mail.toLowerCase();
+			return Enumerable.from(this.$_scope.participants).any(function(p) {
+				return ss.referenceEquals(p.mail.toLowerCase(), mail);
+			});
 		},
 		$hideRow: function(rowId) {
 			var row = $('#' + rowId);
@@ -196,6 +224,35 @@
 			var bttns = $('#bttns-' + rowIdx);
 			bttns.addClass('hidden');
 			return rowIdx;
+		},
+		$initParticipantsByJsonString: function(participantsAsJson) {
+			if (ss.isNullOrEmptyString(participantsAsJson)) {
+				return;
+			}
+			var newParticipants = JSON.parse(participantsAsJson);
+			var participants = this.$_scope.participants;
+			ss.clear(participants);
+			ss.arrayAddRange(participants, Enumerable.from(newParticipants).select(function(p) {
+				return new $Reunion_Scripts_ParticipantController$Participant.$ctor1(p);
+			}));
+		},
+		$insertOrUpdateParticipant: function(participant) {
+			var participantIdx = Enumerable.from(this.$_scope.participants).indexOf(function(p) {
+				return ss.referenceEquals(p.mail, participant.mail);
+			});
+			if (participantIdx >= 0) {
+				this.$_scope.participants[participantIdx] = participant;
+				return false;
+			}
+			else {
+				this.$_scope.participants.push(participant);
+				return true;
+			}
+		},
+		$isValid: function(participant) {
+			var mailRegex = new RegExp('^([a-z0-9_\\.-]+\\@[\\da-z\\.-]+\\.[a-z\\.]{2,6})$', 'gm');
+			return ss.isValue(participant) && ss.isValue(participant.name) && participant.name.length > 0 && mailRegex.test(participant.mail);
+			// we do need brackets due to a JavaScript bug in Chrome
 		},
 		$showLastEditedRow: function() {
 			var lastEditedRow = $('#row-' + this.$_scope.currentEditingRowIdx);
@@ -219,64 +276,12 @@
 				inputRow.css('left', '0');
 			}
 		},
-		$onInsertParticipant: function(event) {
-			var newParticipant = new $Reunion_Scripts_ParticipantController$Participant(this.$_scope.editrow);
-			if (!this.$isValid(newParticipant) || this.$existsParticipant(newParticipant)) {
-				return;
-			}
-			if (this.$insertOrUpdateParticipant(newParticipant)) {
-				this.$_scope.editrow.clearNameAndEmail();
-			}
-		},
-		$existsParticipant: function(newParticipant) {
-			var mail = newParticipant.mail.toLowerCase();
-			return Enumerable.from(this.$_scope.participants).any(function(p) {
-				return ss.referenceEquals(p.mail.toLowerCase(), mail);
-			});
-		},
-		$isValid: function(participant) {
-			var mailRegex = new RegExp('^([a-z0-9_\\.-]+\\@[\\da-z\\.-]+\\.[a-z\\.]{2,6})$', 'gm');
-			return ss.isValue(participant) && ss.isValue(participant.name) && participant.name.length > 0 && mailRegex.test(participant.mail);
-			// we do need brackets due to a JavaScript bug in Chrome
-		},
 		$updateParticipant: function(rowIdx, participant) {
 			var participantIdx = Enumerable.from(this.$_scope.participants).indexOf(function(p) {
 				return ss.referenceEquals(p.mail, participant.mail);
 			});
 			if (rowIdx >= 0 && rowIdx < this.$_scope.participants.length && (participantIdx === rowIdx || participantIdx < 0)) {
 				this.$_scope.participants[rowIdx] = participant;
-			}
-		},
-		$insertOrUpdateParticipant: function(participant) {
-			var participantIdx = Enumerable.from(this.$_scope.participants).indexOf(function(p) {
-				return ss.referenceEquals(p.mail, participant.mail);
-			});
-			if (participantIdx >= 0) {
-				this.$_scope.participants[participantIdx] = participant;
-			}
-			else {
-				this.$_scope.participants.push(participant);
-				return true;
-			}
-			return false;
-		},
-		$initParticipantsByJsonString: function(participantsAsJson) {
-			if (ss.isNullOrEmptyString(participantsAsJson)) {
-				return;
-			}
-			var newParticipants = JSON.parse(participantsAsJson);
-			var participants = this.$_scope.participants;
-			ss.clear(participants);
-			ss.arrayAddRange(participants, Enumerable.from(newParticipants).select(function(p) {
-				return new $Reunion_Scripts_ParticipantController$Participant.$ctor1(p);
-			}));
-		},
-		$onParticipantsCollectionChanged: function(newValue, oldValue) {
-			var json = JSON.stringify(Enumerable.from(newValue).select(function(p) {
-				return new $Reunion_Web_Models_ParticipantViewModel.$ctor1(p.id, p.name, p.mail, p.isRequired, p.contactPolicy, p.playerLanguageIsoCode);
-			}).toArray());
-			if (!ss.referenceEquals(json, this.$_scope.participantsAsJson)) {
-				this.$_scope.participantsAsJson = json;
 			}
 		}
 	});
@@ -300,14 +305,12 @@
 			}
 			return this.contactPolicyDisplayText;
 		},
-		$getDisplayTextOfLanguage: function(isoCode) {
-			return $('.lang option[value="' + isoCode + '"]').text();
-		},
-		$getDisplayTextOfContactPolicy: function(contactPolicy) {
-			return $('.contactPolicy option[value="' + contactPolicy + '"]').text();
-		},
 		getLocalizedRequiredStatus: function(requiredDisplayText) {
 			return (this.isRequired ? requiredDisplayText : '');
+		},
+		clearNameAndEmail: function() {
+			this.name = '';
+			this.mail = '';
 		},
 		init$1: function(id, name, mail, isRequired, contactPolicy, playerLanguageIsoCode) {
 			this.id = id;
@@ -328,19 +331,21 @@
 		init: function(participant) {
 			this.init$1(participant.id, participant.name, participant.mail, participant.isRequired, participant.contactPolicy, participant.playerLanguageIsoCode);
 		},
+		isEqual$1: function(participant) {
+			return ss.referenceEquals(this.name, participant.name) && ss.referenceEquals(this.mail, participant.mail) && this.isRequired === participant.isRequired && this.contactPolicy === participant.contactPolicy && ss.referenceEquals(this.playerLanguageDisplayText, participant.playerLanguageDisplayText) && ss.referenceEquals(this.playerLanguageIsoCode, participant.playerLanguageIsoCode);
+		},
+		$getDisplayTextOfLanguage: function(isoCode) {
+			return $('.lang option[value="' + isoCode + '"]').text();
+		},
+		$getDisplayTextOfContactPolicy: function(contactPolicy) {
+			return $('.contactPolicy option[value="' + contactPolicy + '"]').text();
+		},
 		$onLanguageIsoCodeChanged: function(newLanguage) {
 			this.playerLanguageDisplayText = this.$getDisplayTextOfLanguage(newLanguage);
 		},
 		$onContactPolicyValueChanged: function(newConatcPolicyValue) {
 			this.contactPolicy = parseInt(newConatcPolicyValue);
 			this.contactPolicyDisplayText = this.$getDisplayTextOfContactPolicy(this.contactPolicy);
-		},
-		isEqual$1: function(participant) {
-			return ss.referenceEquals(this.name, participant.name) && ss.referenceEquals(this.mail, participant.mail) && this.isRequired === participant.isRequired && this.contactPolicy === participant.contactPolicy && ss.referenceEquals(this.playerLanguageDisplayText, participant.playerLanguageDisplayText) && ss.referenceEquals(this.playerLanguageIsoCode, participant.playerLanguageIsoCode);
-		},
-		clearNameAndEmail: function() {
-			this.name = '';
-			this.mail = '';
 		}
 	}, $Reunion_Web_Models_ParticipantViewModel);
 	$Reunion_Scripts_ParticipantController$Participant.$ctor1.prototype = $Reunion_Scripts_ParticipantController$Participant.$ctor2.prototype = $Reunion_Scripts_ParticipantController$Participant.prototype;

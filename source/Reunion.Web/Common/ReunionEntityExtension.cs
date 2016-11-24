@@ -9,6 +9,13 @@ namespace Reunion.Web.Common
 {
 	public static class ReunionEntityExtension
 	{
+		/// <summary>
+		/// Gets ReunionViewModel from ReunionEntity
+		/// </summary>
+		/// <param name="reunionEntity"></param>
+		/// <param name="participants"></param>
+		/// <param name="timeRangesOfOrganizer"></param>
+		/// <returns></returns>
 		public static ReunionViewModel GetReunionViewModel(
 			this ReunionEntity reunionEntity, 
 			IEnumerable<Participant> participants, 

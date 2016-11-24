@@ -22,7 +22,9 @@ namespace Reunion.Web.Common
 		/// {0}: id of reunion
 		/// </summary>
 		string StatusPageOfReunion { get; }
-
+		/// <summary>
+		/// account of mail smtp server
+		/// </summary>
 		string MailAccount_MailAddress { get; }
 		string MailAccount_UserName { get; }
 		string MailAccount_Password { get; }
